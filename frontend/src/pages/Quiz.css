@@ -1,0 +1,174 @@
+/* Quiz Page Container */
+.quiz-page {
+  max-width: 800px;
+  margin: 1rem auto; /* Center horizontally */
+  padding: 1rem;
+  background: transparent; 
+  border-radius: 12px;
+  
+  box-sizing: border-box;
+}
+
+/* Quiz Page Heading */
+.quiz-header {
+ 
+  font-size: 1.75rem;
+  text-align: center;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.45);
+  margin-bottom: 1rem;
+}
+
+body.dark-mode .quiz-goodbye {
+  background-color: #2a2a2a;
+}
+
+body.dark-mode .quiz-goodbye a {
+  color: #90cdf4;
+}
+
+body.dark-mode .question-list {
+  color: #90cdf4;
+}
+
+
+
+
+
+/* Completion Message  */
+.quiz-goodbye {
+  text-align: center;
+  font-size: 2rem;
+  background-color: rgba(40, 39, 39, 0.1);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);/*helps to see where things are at also */
+  letter-spacing: 1px;
+  
+}
+
+/* Retake Quiz Button */
+.quiz-goodbye button {
+  background-color: #007bff;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.quiz-goodbye button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Link to Leaderboard page-Did I overRide with letter spacing? */
+.quiz-goodbye a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  letter-spacing: -0.5px;
+  
+}
+
+.button-link {
+  display: inline-block;
+  font-size: 1.15rem;
+  margin-left: 4rem;
+  padding: 0.5rem 0.5rem;
+  background-color: #007bff;
+  color: rgb(249, 244, 244); /* Make the text white */
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: none;
+  
+}
+
+.button-link:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+
+
+.question-item {
+    background-color: rgba(40, 39, 39, 0.2); 
+    
+}
+
+.question-list {
+    background-color: rgba(48, 46, 46, 0.2); 
+    border-radius: 15px;
+    min-height: 400px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.10);
+}
+
+
+
+.next-button {
+    background-color: #007bff;
+}
+
+.quiz-status {
+    font-size: 1.3rem;
+    text-decoration: underline;
+}
+
+.question-item h3 {
+    font-size: 1.2rem;
+   
+}
+
+
+@media (max-width: 600px) {
+  .quiz-page {
+    padding: 1rem;
+  }
+
+  .quiz-header {
+    font-size: 1.5rem;
+  }
+
+  .quiz-goodbye {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+
+  .quiz-goodbye button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+  .subject-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-family: 'Arial', sans-serif;
+  font-size: 1.1rem;
+}
+
+.subject-selector label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.subject-selector select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #555;
+  background-color: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.subject-selector select:hover,
+.subject-selector select:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+}

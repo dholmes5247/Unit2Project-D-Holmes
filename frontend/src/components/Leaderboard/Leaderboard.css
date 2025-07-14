@@ -1,0 +1,187 @@
+/* ========== Main Container ========== */
+.leaderboard-body {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 5px;
+  gap: 40px;
+}
+
+/* ========== Sidebar ========== */
+.sidebar {
+  flex: 0 0 300px;
+  margin: 45px 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 80px;
+}
+
+.quote {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #000;
+  line-height: 1.25;
+  text-align: center;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.55);
+}
+
+body.dark-mode .quote {
+  color: #fff;
+}
+
+.signature {
+  font-family: 'Brush Script MT', cursive;
+  font-size: 2.25rem;
+  padding-top: 1.3rem;
+}
+
+.albert-link {
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.albert-link:hover {
+  transform: scale(1.1);
+  filter: grayscale(0%) contrast(120%);
+}
+
+.albert-img {
+  animation: pulse 3s infinite;
+  transition: transform 1s;
+  max-width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+}
+
+/* ========== Leaderboard ========== */
+.home-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-x: auto;
+}
+
+.leaderboard {
+  flex: 2;
+  background: #f9f9f9;
+  padding: 20px;
+  border: 2px solid black;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+  filter: brightness(0.9);
+ 
+}
+
+.leaderboard h2 {
+  background-color: rgba(175, 166, 166, 0.8);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: inline-block;
+  font-size: 1.75rem;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== Table ========== */
+.leaderboard table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.leaderboard thead {
+  font-weight: bold;
+  text-decoration: underline;
+  color: var(--text-color);
+  font-size: 1rem;
+  text-align: left;
+}
+
+.leaderboard th,
+.leaderboard td {
+  padding: 10px;
+  text-align: left;
+  font-size: 1rem;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid #ddd;
+}
+
+.leaderboard th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.leaderboard th:last-child {
+  border-top-right-radius: 8px;
+}
+
+.leaderboard tbody tr:nth-child(odd) {
+  background-color: #afa6a6;
+}
+
+.leaderboard tbody tr:nth-child(odd) td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.leaderboard tbody tr:nth-child(odd) td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.leaderboard tbody tr:hover {
+  background-color: #ddd;
+  cursor: default;
+}
+
+/* ========== Button ========== */
+.reset-button {
+  animation: pulse 1.5s infinite;
+  transition: transform 0.2s;
+}
+
+/* ========== Responsive Design ========== */
+@media (max-width: 600px) {
+  .leaderboard-body {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .sidebar {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    margin: 0;
+  }
+
+  .leaderboard {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .leaderboard table th,
+  .leaderboard table td {
+    font-size: 0.95rem;
+    padding: 8px;
+  }
+}
+
