@@ -1,0 +1,140 @@
+.site-header {
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 2rem;
+  background-color: #221063;
+  color: #ffffff;
+  font-size: 1.2rem;
+}
+
+.welcome-message {
+  text-align: left;
+  max-width: 100%;
+}
+
+.app-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.userName {
+  color: #f5f542;
+  font-weight: bolder;
+  font-size: 1.5rem;
+  font-style: oblique;
+  text-decoration: underline;
+  margin-top: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-left: 20px;
+  opacity: 0;
+  animation: fadeInSlide 1.5s ease forwards;
+}
+
+.sign-in-prompt {
+  animation: pulse 2s infinite;
+  font-weight: bold;
+  border-radius: 4px;
+  color: #f5f542;
+  font-size: 1.4rem;
+  font-style: oblique;
+  text-decoration: underline;
+  margin-top: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+/* Animations */
+@keyframes fadeInSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-80px) scale(0.25);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(10px) scale(1.25); /* temporarily grows */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(0.85);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Nav links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+   padding: 0;
+  margin: 0;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+/* Logout button */
+.logout-button {
+  animation: pulse 2s infinite;
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+.signInLink {
+  animation: pulse 2s infinite;
+  border-radius: 5px;
+}
+
+
+@media (max-width: 750px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .nav-links {
+    justify-content: center;
+  }
+
+  .sign-in-prompt,
+  .userName {
+    text-align: center;
+    margin-left: 0;
+  }
+}
+
+
+
