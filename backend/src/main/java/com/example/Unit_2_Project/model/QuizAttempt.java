@@ -32,9 +32,7 @@ public class QuizAttempt {
     private List<QuizAttemptQuestion> quizAttemptQuestions = new ArrayList<>();
     // List of question responses in this quiz attempt
 
-    /**
-     * Convenience method to keep both sides of the relationship in sync
-     */
+    /* Convenience method to keep both sides of the relationship in sync */
     public void addAttemptQuestion(QuizAttemptQuestion attemptQuestion) {
         quizAttemptQuestions.add(attemptQuestion);
         attemptQuestion.setQuizAttempt(this);
