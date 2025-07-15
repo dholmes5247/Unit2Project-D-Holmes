@@ -28,10 +28,11 @@ public class SubjectController {
     public ResponseEntity<?> getSubjectById(@PathVariable int id) {
         Optional<Subject> subject = subjectRepository.findById(id);
         return subject.map(ResponseEntity::ok)
-                .orElseGet(() ->
-                        ResponseEntity.status(404)
-                                .body("Subject with ID " + id + " was not found."));
+                .orElseGet(() -> ResponseEntity
+                        .status(404)
+                        .body("Subject with ID " + id + " was not found."));
     }
+
 
     // POST /api/subjects - Create a new subject
     @PostMapping
