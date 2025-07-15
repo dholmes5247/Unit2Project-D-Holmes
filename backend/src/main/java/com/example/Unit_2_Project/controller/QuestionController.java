@@ -14,15 +14,17 @@ import com.example.Unit_2_Project.repository.QuestionRepository;
 @RestController
 @RequestMapping("/api/questions")
 @CrossOrigin(origins = "*") // Allow frontend access
-
 public class QuestionController {
+
     @Autowired
     private QuestionRepository questionRepository;
+
     // GET /api/questions - Get all questions
     @GetMapping
     public List<Question> getAllQuestions() {
         return questionRepository.findAll();
     }
+
     // GET /api/questions/{id} - Get a question by ID
     @GetMapping("/{id}")
     public ResponseEntity<Object> getQuestionById(@PathVariable int id) {
@@ -36,6 +38,11 @@ public class QuestionController {
         }
     }
 
-
-
+    // POST /api/questions - Create a new question
+    @PostMapping
+    public ResponseEntity<Question> createQuestion(@RequestBody Question question) {
+        Question savedQuestion = questionRepository.save(question);
+        return ResponseEntity.status(201).body(savedQuestion); // Return the saved question with status 201
+    }
 }
+
