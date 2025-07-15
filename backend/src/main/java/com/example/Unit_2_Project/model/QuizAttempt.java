@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity                          // Marks this class as a JPA entity (i.e., a database table)
+@Entity                          // Marks this class as a JPA entity
 @Data                            // Lombok: generates getters, setters, toString, equals, hashCode
 @NoArgsConstructor               // Lombok: generates a no-arg constructor (needed by JPA)
 @AllArgsConstructor              // Lombok: generates a constructor with all fields
@@ -32,11 +32,14 @@ public class QuizAttempt {
     private List<QuizAttemptQuestion> quizAttemptQuestions = new ArrayList<>();
     // List of question responses in this quiz attempt
 
-    /* Convenience method to keep both sides of the relationship in sync */
+    /**
+     * Convenience method to keep both sides of the relationship in sync
+     */
     public void addAttemptQuestion(QuizAttemptQuestion attemptQuestion) {
         quizAttemptQuestions.add(attemptQuestion);
         attemptQuestion.setQuizAttempt(this);
     }
 }
+
 
 
