@@ -1,7 +1,7 @@
 package com.example.Unit_2_Project.controller;
 
 
-import com.example.Unit_2_Project.model.QuizAttempt;
+
 import com.example.Unit_2_Project.model.QuizAttemptQuestion;
 import com.example.Unit_2_Project.repository.QuizAttemptQuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,8 @@ public class QuizAttemptQuestionController {
         Optional<QuizAttemptQuestion> optional = quizAttemptQuestionRepository.findById(id);
         if (optional.isPresent()) {
             QuizAttemptQuestion existing = optional.get();
-            existing.setAnswer(updatedQuizAttemptQuestion.isAnswer());
+            existing.setUserAnswer(updatedQuizAttemptQuestion.isUserAnswer());
+
             existing.setQuestion(updatedQuizAttemptQuestion.getQuestion());
             existing.setQuizAttempt(updatedQuizAttemptQuestion.getQuizAttempt());
             quizAttemptQuestionRepository.save(existing);
