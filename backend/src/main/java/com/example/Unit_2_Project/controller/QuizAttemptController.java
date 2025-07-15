@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/quiz-attempts")
@@ -17,36 +16,34 @@ public class QuizAttemptController {
     @Autowired
     private QuizAttemptRepository quizAttemptRepository;
 
-    // GET /api/quiz-attempts - Get all attempts
+    // GET all quiz attempts
     @GetMapping
     public List<QuizAttempt> getAllAttempts() {
         return quizAttemptRepository.findAll();
     }
 
-    // GET /api/quiz-attempts/{id} - Get a specific attempt by ID
+    // GET a specific quiz attempt by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAttemptById(@PathVariable int id) {
+    public ResponseEntity<Object> getAttemptById(@PathVariable int id) {
         Optional<QuizAttempt> attempt = quizAttemptRepository.findById(id);
-
         if (attempt.isPresent()) {
             return ResponseEntity.ok(attempt.get());
         } else {
-            return ResponseEntity
-                    .status(404)
-                    .body("QuizAttempt with ID " + id + " was not found.");
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "QuizAttempt with ID " + id + " was not found.");
+            return ResponseEntity.status(404).body(error);
         }
     }
 
-
-    // POST /api/quiz-attempts - Create a new quiz attempt
+    // POST a new quiz attempt
     @PostMapping
     public QuizAttempt createAttempt(@RequestBody QuizAttempt attempt) {
         return quizAttemptRepository.save(attempt);
     }
 
-    // PUT /api/quiz-attempts/{id} - Update an existing quiz attempt
+    // PUT to update an existing quiz attempt
     @PutMapping("/{id}")
-    public ResponseEntity<QuizAttempt> updateAttempt(@PathVariable int id, @RequestBody QuizAttempt updatedAttempt) {
+    public ResponseEntity<Object> updateAttempt(@PathVariable int id, @RequestBody QuizAttempt updatedAttempt) {
         Optional<QuizAttempt> optional = quizAttemptRepository.findById(id);
         if (optional.isPresent()) {
             QuizAttempt existing = optional.get();
@@ -54,20 +51,28 @@ public class QuizAttemptController {
             existing.setUser(updatedAttempt.getUser());
             existing.setSubject(updatedAttempt.getSubject());
             existing.setQuizAttemptQuestions(updatedAttempt.getQuizAttemptQuestions());
-            return ResponseEntity.ok(quizAttemptRepository.save(existing));
+            quizAttemptRepository.save(existing);
+            return ResponseEntity.ok(existing);
         } else {
-            return ResponseEntity.notFound().build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "QuizAttempt with ID " + id + " cannot be updated because it was not found.");
+            return ResponseEntity.status(404).body(error);
         }
     }
 
-    // DELETE /api/quiz-attempts/{id} - Delete a quiz attempt
+    // DELETE a quiz attempt
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAttempt(@PathVariable int id) {
+    public ResponseEntity<Object> deleteAttempt(@PathVariable int id) {
         if (quizAttemptRepository.existsById(id)) {
             quizAttemptRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "QuizAttempt with ID " + id + " was successfully deleted.");
+            return ResponseEntity.ok(response);
+        } else {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "QuizAttempt with ID " + id + " could not be deleted because it does not exist.");
+            return ResponseEntity.status(404).body(error);
         }
-        return ResponseEntity.notFound().build();
     }
 }
 

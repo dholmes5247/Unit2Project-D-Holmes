@@ -1,5 +1,7 @@
 package com.example.Unit_2_Project.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.List;
 
@@ -23,12 +25,15 @@ public class QuestionController {
     }
     // GET /api/questions/{id} - Get a question by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getQuestionById(@PathVariable int id) {
+    public ResponseEntity<Object> getQuestionById(@PathVariable int id) {
         Optional<Question> question = questionRepository.findById(id);
-        return question.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity
-                        .status(404)
-                        .body("Question with ID " + id + " was not found."));
+        if (question.isPresent()) {
+            return ResponseEntity.ok(question.get());
+        } else {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Question with ID " + id + " was not found.");
+            return ResponseEntity.status(404).body(error);
+        }
     }
 
 

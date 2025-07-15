@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,12 +27,15 @@ public class UserController {
 
     // GET /api/users/{id} - Get a user by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable int id) {
+    public ResponseEntity<Object> getUserById(@PathVariable int id) {
         Optional<User> user = userRepository.findById(id);
-        return user.map(ResponseEntity::ok)
-                .orElseGet(() ->
-                        ResponseEntity.status(404)
-                                .body("User with ID " + id + " was not found."));
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        } else {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "User with ID " + id + " was not found.");
+            return ResponseEntity.status(404).body(error);
+        }
     }
 
     // POST /api/users - Create a new user
