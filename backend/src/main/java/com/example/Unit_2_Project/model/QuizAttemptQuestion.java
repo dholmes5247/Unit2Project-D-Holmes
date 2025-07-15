@@ -1,27 +1,30 @@
 package com.example.Unit_2_Project.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Data                                // Lombok: generates getters/setters, equals/hashCode, toString
-@NoArgsConstructor                   // Required by JPA
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class QuizAttemptQuestion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;                  // Primary key for this record
+    private int id;
 
-    private boolean userAnswer;     // The user's answer (true/false)
-    private boolean correct;        // Whether the answer was correct
+    private boolean answer; // The user's answer to the question (true/false)
 
-    @ManyToOne
-    @JoinColumn(name = "quiz_attempt_id", nullable = false)
-    private QuizAttempt quizAttempt;   // The quiz attempt this question belongs to
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quiz_attempt_id")
+    @JsonBackReference
+    private QuizAttempt quizAttempt;
 
-    @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question question;         // The actual question being answered
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    @JsonBackReference
+    private Question question;
 }
+
 

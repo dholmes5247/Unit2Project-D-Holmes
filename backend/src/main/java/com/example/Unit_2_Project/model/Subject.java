@@ -40,9 +40,7 @@ public class Subject {
         question.setSubject(this);
     }
 
-    /**
-     * Convenience method to maintain bidirectional relationship with QuizAttempt
-     */
+
     public void addQuizAttempt(QuizAttempt attempt) {
         quizAttempts.add(attempt);
         attempt.setSubject(this);
