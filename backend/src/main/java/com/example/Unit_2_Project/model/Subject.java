@@ -1,5 +1,6 @@
 package com.example.Unit_2_Project.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,8 +24,7 @@ public class Subject {
     private String imageUrl;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude               // Prevent infinite loops when printing
-    @EqualsAndHashCode.Exclude     // Prevents circular reference errors
+    @JsonManagedReference // prevents infinite recursion
     private List<Question> questions = new ArrayList<>();
     // List of questions under this subject
 

@@ -1,5 +1,6 @@
 package com.example.Unit_2_Project.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +25,7 @@ public class Question {
     private Subject subject;        // The subject this question belongs to
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude               // Prevent recursive printing
-    @EqualsAndHashCode.Exclude
+    @JsonBackReference // Prevents infinite recursion in JSON serialization
     private List<QuizAttemptQuestion> quizAttemptQuestions = new ArrayList<>();
     // Links to user responses in quiz attempts
 
