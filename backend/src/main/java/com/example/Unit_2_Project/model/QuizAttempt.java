@@ -6,40 +6,45 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity                          // Marks this class as a JPA entity
-@Data                            // Lombok: generates getters, setters, toString, equals, hashCode
-@NoArgsConstructor               // Lombok: generates a no-arg constructor (needed by JPA)
-@AllArgsConstructor              // Lombok: generates a constructor with all fields
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuizAttempt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;              // Primary key, auto-generated
+    private int id;
 
-    private int score;          // Total score for this quiz attempt
+    private int score;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;          // The user who took this quiz
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)
-    private Subject subject;    // The subject this quiz attempt belongs to
+    private Subject subject;
 
     @OneToMany(mappedBy = "quizAttempt", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude           // Prevents infinite recursion in toString()
-    @EqualsAndHashCode.Exclude // Excludes from equals/hashCode to avoid circular logic
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<QuizAttemptQuestion> quizAttemptQuestions = new ArrayList<>();
-    // List of question responses in this quiz attempt
 
-    /**
-     * Convenience method to keep both sides of the relationship in sync
-     */
+    // Convenience method to keep both sides of the relationship in sync
     public void addAttemptQuestion(QuizAttemptQuestion attemptQuestion) {
         quizAttemptQuestions.add(attemptQuestion);
         attemptQuestion.setQuizAttempt(this);
     }
+
+    // Custom constructor without ID (JPA will generate the ID automatically)
+    public QuizAttempt(User user, Subject subject, int score) {
+        this.user = user;
+        this.subject = subject;
+        this.score = score;
+    }
 }
+
 
 
 

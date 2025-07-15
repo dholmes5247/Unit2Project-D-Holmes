@@ -1,57 +1,63 @@
 package com.example.Unit_2_Project.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.List;
-
 import com.example.Unit_2_Project.model.Question;
+import com.example.Unit_2_Project.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.Unit_2_Project.repository.QuestionRepository;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/questions")
-@CrossOrigin(origins = "*") // Allow frontend access
+@CrossOrigin(origins = "*")
 public class QuestionController {
 
     @Autowired
     private QuestionRepository questionRepository;
 
-    // GET /api/questions - Get all questions
+    // GET all questions
     @GetMapping
     public List<Question> getAllQuestions() {
         return questionRepository.findAll();
     }
 
-    // GET /api/questions/{id} - Get a question by ID
+    // GET a question by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getQuestionById(@PathVariable int id) {
-        Optional<Question> question = questionRepository.findById(id);
-        if (question.isPresent()) {
-            return ResponseEntity.ok(question.get());
-        } else {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Question with ID " + id + " was not found.");
-            return ResponseEntity.status(404).body(error);
-        }
+    public ResponseEntity<Question> getQuestionById(@PathVariable int id) {
+        return questionRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new NoSuchElementException("Question with ID " + id + " not found"));
     }
 
-    // POST /api/questions - Create a new question
+
+    // POST a new question
     @PostMapping
-    public ResponseEntity<Question> createQuestion(@RequestBody Question question) {
-        Question savedQuestion = questionRepository.save(question);
-        return ResponseEntity.status(201).body(savedQuestion); // Return the saved question with status 201
+    public Question createQuestion(@RequestBody Question question) {
+        return questionRepository.save(question);
     }
 
+    // PUT update an existing question
+    @PutMapping("/{id}")
+    public ResponseEntity<Question> updateQuestion(@PathVariable int id, @RequestBody Question updated) {
+        return questionRepository.findById(id).map(existing -> {
+            existing.setText(updated.getText());
+            existing.setAnswer(updated.isAnswer());
+            existing.setDifficulty(updated.getDifficulty());
+            existing.setSubject(updated.getSubject());
+            return ResponseEntity.ok(questionRepository.save(existing));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // DELETE a question
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable int id) {
         if (questionRepository.existsById(id)) {
             questionRepository.deleteById(id);
-            return ResponseEntity.noContent().build(); // HTTP 204
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.notFound().build(); // HTTP 404
+        return ResponseEntity.notFound().build();
     }
 }
+
 

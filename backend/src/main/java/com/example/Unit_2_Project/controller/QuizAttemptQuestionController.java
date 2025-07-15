@@ -1,7 +1,5 @@
 package com.example.Unit_2_Project.controller;
 
-
-
 import com.example.Unit_2_Project.model.QuizAttemptQuestion;
 import com.example.Unit_2_Project.repository.QuizAttemptQuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
+import java.util.Optional;
 @RestController
 @RequestMapping("/api/quiz-attempt-questions")
 @CrossOrigin(origins = "*") // Allow frontend access
@@ -49,10 +47,14 @@ public class QuizAttemptQuestionController {
         Optional<QuizAttemptQuestion> optional = quizAttemptQuestionRepository.findById(id);
         if (optional.isPresent()) {
             QuizAttemptQuestion existing = optional.get();
-            existing.setUserAnswer(updatedQuizAttemptQuestion.isUserAnswer());
 
+            // Update the answer using Lombok's generated methods
+            existing.setAnswer(updatedQuizAttemptQuestion.isAnswer());
+
+            // Update the question and quiz attempt relationships
             existing.setQuestion(updatedQuizAttemptQuestion.getQuestion());
             existing.setQuizAttempt(updatedQuizAttemptQuestion.getQuizAttempt());
+
             quizAttemptQuestionRepository.save(existing);
             return ResponseEntity.ok(existing);
         } else {
@@ -77,4 +79,5 @@ public class QuizAttemptQuestionController {
         }
     }
 }
+
 
