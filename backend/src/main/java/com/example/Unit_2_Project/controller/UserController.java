@@ -2,6 +2,7 @@ package com.example.Unit_2_Project.controller;
 
 import com.example.Unit_2_Project.model.User;
 import com.example.Unit_2_Project.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*") // Allow frontend access
+
 public class UserController {
 
     @Autowired
@@ -40,7 +42,7 @@ public class UserController {
 
     // POST /api/users - Create a new user
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         return userRepository.save(user);
     }
 

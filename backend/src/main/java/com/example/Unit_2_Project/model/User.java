@@ -1,51 +1,45 @@
 package com.example.Unit_2_Project.model;
 
-import jakarta.persistence.*;      // JPA annotations for entity mapping
-import lombok.*;                  // Lombok annotations to reduce boilerplate
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Entity                           // Marks this class as a JPA entity (table)
-@Getter                          // Lombok: generates getters for all fields
-@Setter                          // Lombok: generates setters for all fields
-@NoArgsConstructor               // Lombok: no-arg constructor (required by JPA)
-@RequiredArgsConstructor         // Lombok: constructor for @NonNull fields
-
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class User {
-
-    //  Fields
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;              // Primary key, auto-incremented
+    private int id;
 
     @NonNull
+    @NotBlank(message = "Username is required.")
+    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters.")
     @Column(nullable = false, unique = true)
-    private String username;     // Unique and required username
+    private String username;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude            // Avoids recursion in toString()
-    @EqualsAndHashCode.Exclude  // Prevents infinite loops in equals/hashCode
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<QuizAttempt> quizAttempts = new ArrayList<>();
-    // One user can have many quiz attempts
-
-    // Convenience Method
-    // Adds a QuizAttempt and keeps the bidirectional relationship in sync
 
     public void addQuizAttempt(QuizAttempt attempt) {
         quizAttempts.add(attempt);
         attempt.setUser(this);
     }
 
-    // ---------- equals & hashCode (based on ID only) ----------
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
+        if (!(o instanceof User user)) return false;
         return id == user.id;
     }
 
@@ -53,8 +47,6 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    // toString
 
     @Override
     public String toString() {
@@ -64,6 +56,7 @@ public class User {
                 '}';
     }
 }
+
 
 
 

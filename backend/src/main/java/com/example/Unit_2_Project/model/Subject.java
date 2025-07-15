@@ -10,6 +10,7 @@ import java.util.List;
 @Data                                // Lombok generates getters, setters, toString, equals, hashCode
 @NoArgsConstructor                   // Required by JPA
 @AllArgsConstructor                  // Useful for full construction
+
 public class Subject {
 
     @Id
@@ -18,6 +19,8 @@ public class Subject {
 
     @Column(nullable = false, unique = true)
     private String name;            // Subject name, e.g., "Java", must be unique and not null
+    private String description;     // Description of the subject, e.g., "Learn Java basics"
+    private String imageUrl;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude               // Prevent infinite loops when printing
