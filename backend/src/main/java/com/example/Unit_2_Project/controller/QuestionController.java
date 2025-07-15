@@ -44,5 +44,14 @@ public class QuestionController {
         Question savedQuestion = questionRepository.save(question);
         return ResponseEntity.status(201).body(savedQuestion); // Return the saved question with status 201
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteQuestion(@PathVariable int id) {
+        if (questionRepository.existsById(id)) {
+            questionRepository.deleteById(id);
+            return ResponseEntity.noContent().build(); // HTTP 204
+        }
+        return ResponseEntity.notFound().build(); // HTTP 404
+    }
 }
 
