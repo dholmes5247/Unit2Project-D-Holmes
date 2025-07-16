@@ -1,5 +1,6 @@
 package com.example.Unit_2_Project.controller;
 
+import com.example.Unit_2_Project.dto.UserDTO;
 import com.example.Unit_2_Project.model.User;
 import com.example.Unit_2_Project.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -15,7 +16,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*") // Allow frontend access
-
 public class UserController {
 
     @Autowired
@@ -42,21 +42,38 @@ public class UserController {
 
     // POST /api/users - Create a new user
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) {
-        return userRepository.save(user);
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) {
+        // Create User entity from UserDTO
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setName(userDTO.getName());
+        user.setSchool(userDTO.getSchool());
+        user.setPassword(userDTO.getPassword()); // Consider hashing the password before saving
+
+        // Save the user to the database
+        userRepository.save(user);
+        return ResponseEntity.status(201).body(user); // Return the created user
     }
 
     // PUT /api/users/{id} - Update an existing user
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User updatedUser) {
+    public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         Optional<User> optional = userRepository.findById(id);
         if (optional.isPresent()) {
-            User existing = optional.get();
-            existing.setUsername(updatedUser.getUsername());
-            existing.setQuizAttempts(updatedUser.getQuizAttempts());
-            return ResponseEntity.ok(userRepository.save(existing));
+            User existingUser = optional.get();
+            existingUser.setUsername(userDTO.getUsername());
+            existingUser.setEmail(userDTO.getEmail());
+            existingUser.setName(userDTO.getName());
+            existingUser.setSchool(userDTO.getSchool());
+            existingUser.setPassword(userDTO.getPassword()); // Consider hashing the password before saving
+
+            userRepository.save(existingUser);
+            return ResponseEntity.ok(existingUser);
         } else {
-            return ResponseEntity.notFound().build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "User with ID " + id + " was not found.");
+            return ResponseEntity.status(404).body(error);
         }
     }
 
@@ -70,4 +87,6 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 }
+
+
 

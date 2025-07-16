@@ -31,6 +31,7 @@ public class Subject {
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonManagedReference // prevents infinite recursion
     private List<QuizAttempt> quizAttempts = new ArrayList<>();
     // List of quiz attempts taken under this subject
 
