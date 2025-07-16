@@ -23,6 +23,9 @@ public class Question {
     @Enumerated(EnumType.STRING) // Stores enum name in the DB (not ordinal number)
     private Difficulty difficulty; // Difficulty level of the question (EASY, MEDIUM, HARD)
 
+    public Question(String text, boolean answer, Difficulty difficulty, Subject subject) {
+    }
+
     public enum Difficulty {
         EASY, MEDIUM, HARD
     }

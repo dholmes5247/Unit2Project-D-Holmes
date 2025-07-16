@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
+@ResponseBody
 public class GlobalExceptionHandler {
 
     // Handle "not found" cases

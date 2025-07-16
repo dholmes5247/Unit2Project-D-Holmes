@@ -1,7 +1,10 @@
 package com.example.Unit_2_Project.controller;
 
+import com.example.Unit_2_Project.dto.QuestionDTO;
 import com.example.Unit_2_Project.model.Question;
+import com.example.Unit_2_Project.model.Subject;
 import com.example.Unit_2_Project.repository.QuestionRepository;
+import com.example.Unit_2_Project.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,9 @@ public class QuestionController {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     // GET all questions
     @GetMapping
@@ -30,33 +36,57 @@ public class QuestionController {
                 .orElseThrow(() -> new NoSuchElementException("Question with ID " + id + " not found"));
     }
 
-
     // POST a new question
     @PostMapping
-    public Question createQuestion(@RequestBody Question question) {
-        return questionRepository.save(question);
+    public ResponseEntity<?> createQuestion(@RequestBody QuestionDTO dto) {
+        Optional<Subject> subjectOpt = subjectRepository.findById(dto.getSubjectId());
+        if (subjectOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Subject not found"));
+        }
+
+        Question question = new Question(dto.getText(), dto.isAnswer(), dto.getDifficulty(), subjectOpt.get());
+        question.setSubject(subjectOpt.get());
+
+        // Validate that the question text is not empty
+        if (question.getText() == null || question.getText().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Question text cannot be empty"));
+        }
+
+        // Save the question and return the saved entity
+        return ResponseEntity.ok(questionRepository.save(question));
     }
 
     // PUT update an existing question
     @PutMapping("/{id}")
-    public ResponseEntity<Question> updateQuestion(@PathVariable int id, @RequestBody Question updated) {
-        return questionRepository.findById(id).map(existing -> {
-            existing.setText(updated.getText());
-            existing.setAnswer(updated.isAnswer());
-            existing.setDifficulty(updated.getDifficulty());
-            existing.setSubject(updated.getSubject());
-            return ResponseEntity.ok(questionRepository.save(existing));
-        }).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> updateQuestion(@PathVariable int id, @RequestBody QuestionDTO dto) {
+        Optional<Question> existingOpt = questionRepository.findById(id);
+        Optional<Subject> subjectOpt = subjectRepository.findById(dto.getSubjectId());
+
+        if (existingOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("error", "Question not found"));
+        }
+
+        if (subjectOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Subject not found"));
+        }
+
+        Question existing = existingOpt.get();
+        existing.setText(dto.getText());
+        existing.setAnswer(dto.isAnswer());
+        existing.setDifficulty(dto.getDifficulty());
+        existing.setSubject(subjectOpt.get());
+
+        return ResponseEntity.ok(questionRepository.save(existing));
     }
 
     // DELETE a question
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable int id) {
-        if (questionRepository.existsById(id)) {
-            questionRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteQuestion(@PathVariable int id) {
+        if (!questionRepository.existsById(id)) {
+            return ResponseEntity.status(404).body(Map.of("error", "Question not found"));
         }
-        return ResponseEntity.notFound().build();
+        questionRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

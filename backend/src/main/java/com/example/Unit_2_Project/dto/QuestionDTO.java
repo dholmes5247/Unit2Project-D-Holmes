@@ -8,5 +8,5 @@ public class QuestionDTO {
     private String text;
     private boolean answer;
     private Difficulty difficulty;
-    private int subjectId;
+    private int subjectId;  // Link to existing Subject by ID
 }
