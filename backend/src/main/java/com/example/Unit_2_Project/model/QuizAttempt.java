@@ -1,5 +1,7 @@
 package com.example.Unit_2_Project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,23 +14,33 @@ import java.util.List;
 @AllArgsConstructor
 public class QuizAttempt {
 
+    // Custom constructor without ID (JPA will generate the ID automatically)
+    public QuizAttempt(User user, Subject subject, int score) {
+        this.user = user;
+        this.subject = subject;
+        this.score = score;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private int score;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Subject subject;
 
     @OneToMany(mappedBy = "quizAttempt", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonManagedReference
     private List<QuizAttemptQuestion> quizAttemptQuestions = new ArrayList<>();
 
     // Convenience method to keep both sides of the relationship in sync
@@ -37,12 +49,7 @@ public class QuizAttempt {
         attemptQuestion.setQuizAttempt(this);
     }
 
-    // Custom constructor without ID (JPA will generate the ID automatically)
-    public QuizAttempt(User user, Subject subject, int score) {
-        this.user = user;
-        this.subject = subject;
-        this.score = score;
-    }
+
 }
 
 

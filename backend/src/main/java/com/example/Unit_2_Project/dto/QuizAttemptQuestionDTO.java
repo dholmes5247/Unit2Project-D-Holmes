@@ -1,10 +1,18 @@
 package com.example.Unit_2_Project.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class QuizAttemptQuestionDTO {
-    private boolean answer;       // The user's answer to the question (true/false)
-    private int questionId;       // ID of the question
-    private int quizAttemptId;    // ID of the quiz attempt
+
+    @NotNull(message = "Answer is required")
+    private boolean answer;
+
+    @NotNull(message = "Question ID is required")
+    private Integer questionId;
+
+    @NotNull(message = "QuizAttempt ID is required")
+    private Integer quizAttemptId;
 }
+
