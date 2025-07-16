@@ -14,8 +14,10 @@ public class QuizAttemptQuestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)  // Ensure it's not nullable to avoid errors when inserting
-    private boolean answer;  // The user's answer to the question (true/false)
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")  // Set the default value to false
+    private boolean answer;
+
+
 
     @Column(nullable = false)  // Ensure it's not nullable
     private boolean correct;  // Whether the answer is correct or not

@@ -35,7 +35,7 @@ public class QuizAttemptController {
 
     // GET a quiz attempt by ID
     @GetMapping("/{id}")
-    public ResponseEntity<QuizAttempt> getQuizAttemptById(@PathVariable int id) {
+    public ResponseEntity<?> getQuizAttemptById(@PathVariable int id) {
         return quizAttemptRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(404)
@@ -73,6 +73,7 @@ public class QuizAttemptController {
         quizAttemptRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
 }
 
 
