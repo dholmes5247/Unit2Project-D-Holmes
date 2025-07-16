@@ -11,7 +11,7 @@ public class QuestionDTO {
     private String text;
 
     @NotNull(message = "Answer must be true or false")
-    private Boolean answer;
+    private boolean answer;
 
     @NotNull(message = "Difficulty must be provided")
     private Difficulty difficulty;

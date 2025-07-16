@@ -24,6 +24,10 @@ public class Question {
     private Difficulty difficulty; // Difficulty level of the question (EASY, MEDIUM, HARD)
 
     public Question(String text, boolean answer, Difficulty difficulty, Subject subject) {
+        this.text = text;
+        this.answer = answer;
+        this.difficulty = difficulty;
+        this.subject = subject;
     }
 
     public enum Difficulty {
