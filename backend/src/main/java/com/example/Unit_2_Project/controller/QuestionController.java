@@ -5,11 +5,14 @@ import com.example.Unit_2_Project.model.Question;
 import com.example.Unit_2_Project.model.Subject;
 import com.example.Unit_2_Project.repository.QuestionRepository;
 import com.example.Unit_2_Project.repository.SubjectRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+
+@AllArgsConstructor
 
 @RestController
 @RequestMapping("/api/questions")
