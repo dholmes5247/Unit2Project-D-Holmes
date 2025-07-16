@@ -1,5 +1,6 @@
 package com.example.Unit_2_Project.controller;
 
+import com.example.Unit_2_Project.dto.SubjectDTO;
 import com.example.Unit_2_Project.model.Subject;
 import com.example.Unit_2_Project.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,27 +38,33 @@ public class SubjectController {
 
     // POST a new subject
     @PostMapping
-    public Subject createSubject(@RequestBody Subject subject) {
-        return subjectRepository.save(subject);
+    public ResponseEntity<?> createSubject(@RequestBody SubjectDTO subjectDTO) {
+        Subject subject = new Subject();
+        subject.setName(subjectDTO.getName());
+        subject.setDescription(subjectDTO.getDescription());
+        subject.setImageUrl(subjectDTO.getImageUrl());
+
+        Subject saved = subjectRepository.save(subject);
+        return ResponseEntity.ok(saved); // optionally convert back to a SubjectResponseDTO
     }
 
     // PUT to update an existing subject
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateSubject(@PathVariable int id, @RequestBody Subject updatedSubject) {
+    public ResponseEntity<?> updateSubject(@PathVariable int id, @RequestBody SubjectDTO dto) {
         Optional<Subject> optional = subjectRepository.findById(id);
         if (optional.isPresent()) {
-            Subject existing = optional.get();
-            existing.setName(updatedSubject.getName());
-            existing.setDescription(updatedSubject.getDescription());
-            existing.setImageUrl(updatedSubject.getImageUrl());
-            subjectRepository.save(existing);
-            return ResponseEntity.ok(existing);
+            Subject subject = optional.get();
+            subject.setName(dto.getName());
+            subject.setDescription(dto.getDescription());
+            subject.setImageUrl(dto.getImageUrl());
+
+            subjectRepository.save(subject);
+            return ResponseEntity.ok(subject);
         } else {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Subject with ID " + id + " cannot be updated because it was not found.");
-            return ResponseEntity.status(404).body(error);
+            return ResponseEntity.status(404).body(Map.of("error", "Subject with ID " + id + " not found."));
         }
     }
+
 
     // DELETE a subject
     @DeleteMapping("/{id}")
