@@ -35,16 +35,11 @@ public class QuizAttemptQuestionController {
 
     // GET a specific quiz attempt question by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getQuizAttemptQuestionById(@PathVariable int id) {
-        Optional<QuizAttemptQuestion> attemptQuestion = quizAttemptQuestionRepository.findById(id);
-        if (attemptQuestion.isPresent()) {
-            return ResponseEntity.ok(attemptQuestion.get());
-        } else {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "QuizAttemptQuestion with ID " + id + " was not found.");
-            return ResponseEntity.status(404).body(error);
-        }
+    public ResponseEntity<QuizAttemptQuestion> getQuizAttemptQuestionById(@PathVariable int id) {
+        Optional<QuizAttemptQuestion> optional = quizAttemptQuestionRepository.findById(id);
+        return optional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     // POST a new quiz attempt question
     @PostMapping
