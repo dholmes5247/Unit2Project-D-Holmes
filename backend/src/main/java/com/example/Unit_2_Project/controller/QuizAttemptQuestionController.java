@@ -62,6 +62,7 @@ public class QuizAttemptQuestionController {
 
         QuizAttemptQuestion quizAttemptQuestion = new QuizAttemptQuestion();
         quizAttemptQuestion.setAnswer(dto.isAnswer());
+        quizAttemptQuestion.setCorrect(dto.isCorrect());
         quizAttemptQuestion.setQuestion(questionOpt.get());
         quizAttemptQuestion.setQuizAttempt(quizAttemptOpt.get());
 

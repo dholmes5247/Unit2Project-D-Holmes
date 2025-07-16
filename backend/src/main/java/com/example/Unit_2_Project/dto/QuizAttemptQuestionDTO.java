@@ -7,12 +7,16 @@ import lombok.Data;
 public class QuizAttemptQuestionDTO {
 
     @NotNull(message = "Answer is required")
-    private boolean answer;
+    private boolean answer;  // User's answer (true or false)
+
+    @NotNull(message = "Correctness of the answer is required")
+    private boolean correct;  // Whether the answer is correct
 
     @NotNull(message = "Question ID is required")
-    private Integer questionId;
+    private Integer questionId;  // ID of the Question linked to this QuizAttemptQuestion
 
     @NotNull(message = "QuizAttempt ID is required")
-    private Integer quizAttemptId;
+    private Integer quizAttemptId;  // ID of the QuizAttempt linked to this QuizAttemptQuestion
 }
+
 
