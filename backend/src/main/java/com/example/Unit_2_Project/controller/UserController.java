@@ -5,6 +5,7 @@ import com.example.Unit_2_Project.model.User;
 import com.example.Unit_2_Project.repository.QuizAttemptRepository;
 import com.example.Unit_2_Project.repository.SubjectRepository;
 import com.example.Unit_2_Project.repository.UserRepository;
+import com.example.Unit_2_Project.security.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,9 +24,7 @@ import java.util.Optional;
 
 
 public class UserController {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;  // Injected
+    // Repositories and services
 
     @Autowired
     private UserRepository userRepository;
@@ -35,6 +34,12 @@ public class UserController {
 
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;  // Injected
 
     // GET /api/users - Get all users
     @GetMapping
@@ -147,29 +152,35 @@ public class UserController {
 
     // POST /api/users/login - Login user
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
-        // Check if user with given email exists in database
-        Optional<User> userOptional = userRepository.findByEmail(userLoginDTO.getEmail());
+    public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO loginDTO) {
+        try {
+            // 1. Lookup user by email
+            Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
 
-        // If user not found, return error
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(404).body("User not found with the provided email");
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email");
+            }
+
+            User user = optionalUser.get();
+
+            // 2. Check password
+            if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+            }
+
+            // 3. Generate token
+            String token = jwtUtil.generateToken(user.getEmail());
+
+            // 4. Return JWT + user info
+            JwtResponseDTO response = new JwtResponseDTO(token, user.getEmail(), user.getUsername());
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred: " + e.getMessage());
         }
-
-        // Retrieve the user from database
-        User user = userOptional.get();
-
-        // Check password matches the stored (hashed) password
-        boolean passwordMatches = passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword());
-
-        //  If password doesn't match, error
-        if (!passwordMatches) {
-            return ResponseEntity.status(401).body("Invalid password");
-        }
-
-        // both email and password match, return success response (or token)
-        return ResponseEntity.ok("Login successful");
     }
+
 
     // PUT /api/users/{id} - Update an existing user
     @PutMapping("/{id}")
