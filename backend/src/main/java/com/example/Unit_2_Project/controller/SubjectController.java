@@ -34,7 +34,7 @@ public class SubjectController {
     }
 
 
-// GET a specific subject by ID
+    // GET a specific subject by ID
     @GetMapping("/{id}")
     public ResponseEntity<Object> getSubjectById(@PathVariable int id) {
         Optional<Subject> optional = subjectRepository.findById(id);
@@ -107,19 +107,18 @@ public class SubjectController {
     }
 
 
-
     // DELETE a subject
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteSubject(@PathVariable int id) {
-        if (subjectRepository.existsById(id)) {
+    public ResponseEntity<?> deleteSubject(@PathVariable int id) {
+        Optional<Subject> optional = subjectRepository.findById(id);
+
+        if (optional.isPresent()) {
             subjectRepository.deleteById(id);
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Subject with ID " + id + " was successfully deleted.");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.noContent().build(); // 204 No Content
         } else {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Subject with ID " + id + " could not be deleted because it does not exist.");
-            return ResponseEntity.status(404).body(error);
+            error.put("error", "Subject with ID " + id + " not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }
 }
