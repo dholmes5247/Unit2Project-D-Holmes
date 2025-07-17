@@ -31,6 +31,15 @@ public class QuizAttempt {
     private LocalDateTime startedAt;
     private LocalDateTime completedAt;
 
+    // calculating seconds for time taken
+    public long getTimeTakenInSeconds() {
+        if (this.startedAt != null && this.completedAt != null) {
+            return java.time.Duration.between(this.startedAt, this.completedAt).getSeconds();
+        }
+        return 0;
+    }
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

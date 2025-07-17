@@ -11,5 +11,5 @@ public class QuizAttemptSummaryDTO {
 
     private int score; // Final score
 
-    private int timeTakenInSeconds; // Time taken to complete quiz
+    private long timeTakenInSeconds; // Time taken to complete quiz
 }

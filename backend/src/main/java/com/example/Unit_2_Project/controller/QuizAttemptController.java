@@ -65,7 +65,7 @@ public class QuizAttemptController {
         attempt.setUser(userOpt.get());
         attempt.setSubject(subjectOpt.get());
 
-        // ✅ Set the startedAt timestamp now
+        // Set the startedAt timestamp now
         attempt.setStartedAt(LocalDateTime.now());
 
         quizAttemptRepository.save(attempt);

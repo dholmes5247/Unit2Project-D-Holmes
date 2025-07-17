@@ -1,14 +1,12 @@
 package com.example.Unit_2_Project.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.Unit_2_Project.model.QuizAttemptQuestion;
 import com.example.Unit_2_Project.model.QuizAttempt;
-
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
 public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Integer> {
-    Optional<QuizAttempt> findById(int intExact);
-    // Additional queries can be added here if needed
-    // For example, to find all attempts for a specific user:
-    // List<QuizAttempt> findByUserId(int userId);
+
+    // Custom query method to find QuizAttempts by User ID
+    static List<QuizAttempt> findByUserId(int userId);
+
 }

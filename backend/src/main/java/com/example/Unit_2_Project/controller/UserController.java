@@ -1,7 +1,11 @@
 package com.example.Unit_2_Project.controller;
 
+import com.example.Unit_2_Project.dto.QuizAttemptSummaryDTO;
 import com.example.Unit_2_Project.dto.UserDTO;
+import com.example.Unit_2_Project.dto.UserProfileDTO;
 import com.example.Unit_2_Project.model.User;
+import com.example.Unit_2_Project.repository.QuizAttemptRepository;
+import com.example.Unit_2_Project.repository.SubjectRepository;
 import com.example.Unit_2_Project.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,12 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private QuizAttemptRepository quizAttemptRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
+
     // GET /api/users - Get all users
     @GetMapping
     public List<User> getAllUsers() {
@@ -39,6 +49,48 @@ public class UserController {
             return ResponseEntity.status(404).body(error);
         }
     }
+
+    // GET user profile including quiz attempt summary
+    @GetMapping("/{id}/profile")
+    public ResponseEntity<Object> getUserProfile(@PathVariable int id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+        }
+
+        User user = optionalUser.get();
+
+        // Map User entity to UserProfileDTO
+        UserProfileDTO profile = new UserProfileDTO();
+        profile.setId(user.getId());
+        profile.setUsername(user.getUsername());
+        profile.setEmail(user.getEmail());
+
+        // Map quiz attempts to summary DTOs
+        List<QuizAttemptSummaryDTO> summaries = QuizAttemptRepository.findByUserId(user.getId())
+                .stream()
+                .map(attempt -> {
+                    QuizAttemptSummaryDTO summary = new QuizAttemptSummaryDTO();
+                    summary.setId(attempt.getId());
+                    summary.setScore(attempt.getScore());
+                    summary.setTimeTakenInSeconds(attempt.getTimeTakenInSeconds());
+
+                    // Look up subject name
+                    String subjectName = attempt.getSubject() != null
+                            ? attempt.getSubject().getName()
+                            : "Unknown Subject";
+                    summary.setSubjectName(subjectName);
+
+                    return summary;
+                })
+                .toList();
+
+        profile.setQuizHistory(summaries);
+
+        return ResponseEntity.ok(profile);
+    }
+
 
     // POST /api/users - Create a new user
     @PostMapping
