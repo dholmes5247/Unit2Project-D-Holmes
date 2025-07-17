@@ -68,7 +68,8 @@ public class UserController {
         profile.setEmail(user.getEmail());
 
         // Map quiz attempts to summary DTOs
-        List<QuizAttemptSummaryDTO> summaries = QuizAttemptRepository.findByUserId(user.getId())
+        List<QuizAttemptSummaryDTO> summaries = quizAttemptRepository.findByUserId(user.getId())
+
                 .stream()
                 .map(attempt -> {
                     QuizAttemptSummaryDTO summary = new QuizAttemptSummaryDTO();
@@ -86,7 +87,7 @@ public class UserController {
                 })
                 .toList();
 
-        profile.setQuizHistory(summaries);
+        profile.setQuizAttempts(summaries);
 
         return ResponseEntity.ok(profile);
     }

@@ -7,6 +7,7 @@ import java.util.List;
 public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Integer> {
 
     // Custom query method to find QuizAttempts by User ID
-    static List<QuizAttempt> findByUserId(int userId);
+    List<QuizAttempt> findByUserId(int userId);
 
 }
+

@@ -33,7 +33,15 @@ public class ExplanationController {
                 : null;
         String expl = geminiService.explainQuestion(q.getText(), context);
 
-        return ResponseEntity.ok(new ExplanationDTO(q.getText(), expl));
+        return ResponseEntity.ok(
+                new ExplanationDTO(
+                        q.getId(),       // Integer id
+                        q.getText(),     // String question
+                        expl             // String explanation
+                )
+        );
+
+
     }
 }
 
