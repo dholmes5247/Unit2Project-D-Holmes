@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class QuizAttemptQuestionDTO {
+    private Integer id;
 
     @NotNull(message = "Answer is required")
     private boolean answer;  // User's answer (true or false)

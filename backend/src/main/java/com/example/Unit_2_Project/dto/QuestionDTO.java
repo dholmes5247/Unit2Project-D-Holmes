@@ -7,6 +7,8 @@ import lombok.Data;
 
 @Data
 public class QuestionDTO {
+    private Integer id;
+
     @NotBlank(message = "Question text cannot be empty")
     private String text;
 

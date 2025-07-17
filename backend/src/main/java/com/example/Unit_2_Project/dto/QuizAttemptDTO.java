@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class QuizAttemptDTO {
+    private Integer id;
 
     @PrePersist
     protected void onCreate() {
