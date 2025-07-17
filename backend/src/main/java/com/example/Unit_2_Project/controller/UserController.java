@@ -153,33 +153,31 @@ public class UserController {
     // POST /api/users/login - Login user
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO loginDTO) {
-        try {
-            // 1. Lookup user by email
-            Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
+        // 🔍 Find user by email
+        Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
 
-            if (optionalUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email");
-            }
-
+        if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            // 2. Check password
-            if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            // Check if the password matches (using the hashed password)
+            if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+
+                // Generate JWT using user email or ID
+                String token = jwtUtil.generateToken(user.getEmail());
+
+                // Return token in response
+                Map<String, String> response = new HashMap<>();
+                response.put("token", token);
+
+                return ResponseEntity.ok(response); // 200 OK with JWT
+            } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
             }
-
-            // 3. Generate token
-            String token = jwtUtil.generateToken(user.getEmail());
-
-            // 4. Return JWT + user info
-            JwtResponseDTO response = new JwtResponseDTO(token, user.getEmail(), user.getUsername());
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred: " + e.getMessage());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
     }
+
 
 
     // PUT /api/users/{id} - Update an existing user
