@@ -1,9 +1,6 @@
 package com.example.Unit_2_Project.controller;
 
-import com.example.Unit_2_Project.dto.QuizAttemptSummaryDTO;
-import com.example.Unit_2_Project.dto.UserDTO;
-import com.example.Unit_2_Project.dto.UserProfileDTO;
-import com.example.Unit_2_Project.dto.UserSignupDTO;
+import com.example.Unit_2_Project.dto.*;
 import com.example.Unit_2_Project.model.User;
 import com.example.Unit_2_Project.repository.QuizAttemptRepository;
 import com.example.Unit_2_Project.repository.SubjectRepository;
@@ -145,6 +142,33 @@ public class UserController {
 
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
+    }
+
+
+    // POST /api/users/login - Login user
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
+        // Check if user with given email exists in database
+        Optional<User> userOptional = userRepository.findByEmail(userLoginDTO.getEmail());
+
+        // If user not found, return error
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found with the provided email");
+        }
+
+        // Retrieve the user from database
+        User user = userOptional.get();
+
+        // Check password matches the stored (hashed) password
+        boolean passwordMatches = passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword());
+
+        //  If password doesn't match, error
+        if (!passwordMatches) {
+            return ResponseEntity.status(401).body("Invalid password");
+        }
+
+        // both email and password match, return success response (or token)
+        return ResponseEntity.ok("Login successful");
     }
 
     // PUT /api/users/{id} - Update an existing user
