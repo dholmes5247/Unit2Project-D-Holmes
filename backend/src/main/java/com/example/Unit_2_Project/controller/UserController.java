@@ -3,13 +3,16 @@ package com.example.Unit_2_Project.controller;
 import com.example.Unit_2_Project.dto.QuizAttemptSummaryDTO;
 import com.example.Unit_2_Project.dto.UserDTO;
 import com.example.Unit_2_Project.dto.UserProfileDTO;
+import com.example.Unit_2_Project.dto.UserSignupDTO;
 import com.example.Unit_2_Project.model.User;
 import com.example.Unit_2_Project.repository.QuizAttemptRepository;
 import com.example.Unit_2_Project.repository.SubjectRepository;
 import com.example.Unit_2_Project.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,7 +23,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*") // Allow frontend access
+
+
 public class UserController {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;  // Injected
 
     @Autowired
     private UserRepository userRepository;
@@ -107,6 +115,36 @@ public class UserController {
         // Save the user to the database
         userRepository.save(user);
         return ResponseEntity.status(201).body(user); // Return the created user
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody UserSignupDTO userDto) {
+
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Email is already in use, try again.");
+        }
+
+        if (userRepository.existsByUsername(userDto.getUsername())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Username is already taken, try again.");
+        }
+
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName()); // <-- Required
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        user.setSchool(userDto.getSchool());
+
+        // Hash the password
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+
+        userRepository.save(user);
+        return ResponseEntity.ok("User registered successfully");
     }
 
     // PUT /api/users/{id} - Update an existing user
