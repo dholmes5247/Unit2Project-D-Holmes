@@ -8,9 +8,12 @@ import com.example.Unit_2_Project.repository.QuizAttemptRepository;
 import com.example.Unit_2_Project.repository.SubjectRepository;
 import com.example.Unit_2_Project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -33,13 +36,14 @@ public class QuizAttemptController {
         return quizAttemptRepository.findAll();
     }
 
-    // GET a quiz attempt by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getQuizAttemptById(@PathVariable int id) {
-        return quizAttemptRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(404)
-                        .body((QuizAttempt) Map.of("error", "QuizAttempt with ID " + id + " not found")));
+    public ResponseEntity<QuizAttempt> getQuizAttemptById(@PathVariable int id) {
+        QuizAttempt attempt = quizAttemptRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "QuizAttempt with ID " + id + " not found"
+                ));
+        return ResponseEntity.ok(attempt);
     }
 
     // POST a new quiz attempt using DTO
@@ -61,7 +65,29 @@ public class QuizAttemptController {
         attempt.setUser(userOpt.get());
         attempt.setSubject(subjectOpt.get());
 
-        return ResponseEntity.ok(quizAttemptRepository.save(attempt));
+        // ✅ Set the startedAt timestamp now
+        attempt.setStartedAt(LocalDateTime.now());
+
+        quizAttemptRepository.save(attempt);
+
+        return ResponseEntity.status(201)
+                .body(Map.of("message", "Quiz attempt created", "attemptId", attempt.getId()));
+    }
+
+    // PUT — mark an existing attempt as completed
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<?> markAttemptAsCompleted(@PathVariable int id) {
+        Optional<QuizAttempt> attemptOpt = quizAttemptRepository.findById(id);
+
+        if (attemptOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("error", "QuizAttempt with ID " + id + " not found"));
+        }
+
+        QuizAttempt attempt = attemptOpt.get();
+        attempt.setCompletedAt(LocalDateTime.now());
+        quizAttemptRepository.save(attempt);
+
+        return ResponseEntity.ok(Map.of("message", "Quiz marked as completed", "completedAt", attempt.getCompletedAt()));
     }
 
     // DELETE a quiz attempt
@@ -70,10 +96,12 @@ public class QuizAttemptController {
         if (!quizAttemptRepository.existsById(id)) {
             return ResponseEntity.status(404).body(Map.of("error", "QuizAttempt not found"));
         }
+
         quizAttemptRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 }
+
+
 
 
