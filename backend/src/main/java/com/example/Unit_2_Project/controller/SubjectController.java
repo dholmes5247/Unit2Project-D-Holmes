@@ -18,9 +18,20 @@ public class SubjectController {
     private SubjectRepository subjectRepository;
 
     // GET all subjects
-    @GetMapping
-    public List<Subject> getAllSubjects() {
-        return subjectRepository.findAll();
+    @GetMapping  // kept getting type mismatch error
+    public List<SubjectDTO> getAllSubjects() {
+        List<Subject> subjects = subjectRepository.findAll();
+        List<SubjectDTO> dtos = new ArrayList<>();
+
+        for (Subject subject : subjects) {
+            SubjectDTO dto = new SubjectDTO();
+            dto.setName(subject.getName());
+            dto.setDescription(subject.getDescription());
+            dto.setImageUrl(subject.getImageUrl());
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 
     // GET a specific subject by ID
