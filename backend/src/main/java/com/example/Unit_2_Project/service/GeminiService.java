@@ -13,10 +13,8 @@ public class GeminiService {
 
     private final Client client;
 
-    /**
-     * Spring will inject your API key from application.properties
-     * (e.g. google.genai.api-key=YOUR_KEY)
-     */
+    // Spring will inject API key from application.properties
+
     public GeminiService(@Value("${google.genai.api-key}") String apiKey) {
         this.client = Client.builder()
                 .apiKey(apiKey)
