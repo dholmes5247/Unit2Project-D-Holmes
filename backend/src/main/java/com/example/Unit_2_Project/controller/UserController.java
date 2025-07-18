@@ -6,6 +6,7 @@ import com.example.Unit_2_Project.repository.QuizAttemptRepository;
 import com.example.Unit_2_Project.repository.SubjectRepository;
 import com.example.Unit_2_Project.repository.UserRepository;
 import com.example.Unit_2_Project.security.JwtUtil;
+import com.example.Unit_2_Project.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ import java.util.Optional;
 
 public class UserController {
     // Repositories and services
+
+    @Autowired
+    private UserService userService; // Injected service for user operations
 
     @Autowired
     private UserRepository userRepository;
@@ -120,32 +124,9 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody UserSignupDTO userDto) {
+    public ResponseEntity<?> signup(@Valid @RequestBody UserSignupDTO userDto) {
+        // now using this in my user serivce
 
-        if (userRepository.existsByEmail(userDto.getEmail())) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Email is already in use, try again.");
-        }
-
-        if (userRepository.existsByUsername(userDto.getUsername())) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Username is already taken, try again.");
-        }
-
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setName(userDto.getName()); // <-- Required
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setSchool(userDto.getSchool());
-
-        // Hash the password
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-
-        userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
     }
 
@@ -153,7 +134,7 @@ public class UserController {
     // POST /api/users/login - Login user
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO loginDTO) {
-        // 🔍 Find user by email
+        //  Find user by email
         Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
 
         if (optionalUser.isPresent()) {
