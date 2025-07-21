@@ -1,3 +1,15 @@
+import React from 'react';
+
+export default function Quiz() {
+  return (
+    <div>
+      <h2>Quiz</h2>
+      <p>This is where your quiz UI will go.</p>
+    </div>
+  );
+}
+
+/*
 import QuestionList from '../components/QuestionList/QuestionList';
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -76,7 +88,7 @@ const handleRetakeQuiz = () => {
 </div>
       <br/>
 
-{/* Show completion screen if quiz is finished */}
+
 
 {!selectedSubject ? (
   <p>Please select a subject to begin the quiz.</p>
@@ -109,4 +121,4 @@ const handleRetakeQuiz = () => {
 }
 
 export default Quiz;
-
+*/

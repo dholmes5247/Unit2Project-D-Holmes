@@ -1,48 +1,57 @@
-import { createContext, useState, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useState, useEffect } from 'react';
 
-// Create the context
+// only exports context + provider
 export const AuthContext = createContext();
 
-// Create the provider
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userName, setUserName] = useState('');
-  const [schoolName, setSchoolName] = useState(''); 
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const isAuthenticated = Boolean(user);
 
+  // rehydrate from localStorage
   useEffect(() => {
-    const storedAuth = localStorage.getItem('isAuthenticated') === 'true';
-    const storedName = localStorage.getItem('userName');
-    const storedSchool = localStorage.getItem('schoolName'); 
-
-    if (storedAuth && storedName && storedSchool) {
-      setIsAuthenticated(true);
-      setUserName(storedName);
-      setSchoolName(storedSchool); 
-    }
+    const saved = localStorage.getItem('user');
+    if (saved) setUser(JSON.parse(saved));
   }, []);
 
-  const login = (name, school) => {
-    setIsAuthenticated(true);
-    setUserName(name);
-    setSchoolName(school); // ✅
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('userName', name);
-    localStorage.setItem('schoolName', school); // ✅
+  const signup = async (data) => {
+    console.log('SIGNUP (stub):', data);
+    return true;
   };
 
+const login = async ({ email, password }) => {
+  const res = await fetch('http://localhost:8080/api/users/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+
+  const body = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(body.message || 'Login failed');
+  }
+
+  const { token: jwt, user: userData } = body;
+  setUser(userData);
+  localStorage.setItem('user', JSON.stringify(userData));
+  localStorage.setItem('token', jwt);
+};
+
+
   const logout = () => {
-    setIsAuthenticated(false);
-    setUserName('');
-    setSchoolName(''); // ✅
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('schoolName'); // ✅
+    setUser(null);
+    localStorage.removeItem('user');
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userName, schoolName, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, signup, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
+}
+
+
 

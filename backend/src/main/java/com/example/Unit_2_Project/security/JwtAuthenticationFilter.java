@@ -1,9 +1,9 @@
+
+
 package com.example.Unit_2_Project.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,49 +13,50 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * This filter runs once per request.
- * It checks if a JWT token is present, validates it,
- * and sets the authentication in the SecurityContext.
- */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
 
+    // Runs once per request — checks for token and sets authentication
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Get token from the Authorization header
         final String authHeader = request.getHeader("Authorization");
 
         String token = null;
         String email = null;
 
+        // Extract token from "Authorization: Bearer <token>"
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7); // Remove "Bearer "
-            email = jwtUtil.extractUsername(token);
+            token = authHeader.substring(7);
+            email = jwtUtil.extractUsername(token); // Get subject (email) from token
         }
 
-        // If email exists and no authentication has been set yet
+        // If token is valid and no authentication is set yet
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             if (jwtUtil.validateToken(token, email)) {
+                // Create Spring Security token
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(email, null, null);
+
                 authenticationToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
+                // Attach to security context
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
 
+        // Continue processing the request
         filterChain.doFilter(request, response);
     }
 }
+
 

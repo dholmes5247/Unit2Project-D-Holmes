@@ -1,11 +1,9 @@
 package com.example.Unit_2_Project.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 
 import java.security.Key;
 import java.util.Date;
@@ -14,54 +12,63 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // Secret key for signing (you can later externalize this into application.properties)
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // or load from config
+    // Load the signing key from application.properties (jwt.secret)
+    @Value("${jwt.secret}")
+    private String secret;
 
-    // Generate token
-    public String generateToken(String email) {
-        return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
-                .signWith(key)
-                .compact();
+    // Construct signing key from the secret
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // Validate token
+    // Create a JWT for the given email
+    public String generateToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)                        // Set email as the subject
+                .setIssuedAt(new Date())                 // Token issue time
+                .setExpiration(new Date(System.currentTimeMillis() + 43200000)) // Expires in 12 hours
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // Sign token with secret
+                .compact();                              // Return final token string
+    }
+
+    // Validate token against expected email and expiration
     public boolean validateToken(String token, String email) {
         String subject = extractUsername(token);
         return subject.equals(email) && !isTokenExpired(token);
     }
 
-    // Extract username (subject)
+    // Extract the email (subject) from the token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extract expiration and check if expired
+    // Check if token is expired
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
+    // Get token expiration date
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // General claim extractor
+    // Generic claim extractor method
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // Core claims parser
+    // Parse token and extract claims using signing key
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 }
+
+
 
 
 
