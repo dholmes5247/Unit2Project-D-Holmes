@@ -1,6 +1,7 @@
 package com.example.Unit_2_Project.controller;
 
 import com.example.Unit_2_Project.dto.QuizAttemptDTO;
+import com.example.Unit_2_Project.dto.QuizAttemptSummaryDTO;
 import com.example.Unit_2_Project.model.QuizAttempt;
 import com.example.Unit_2_Project.model.Subject;
 import com.example.Unit_2_Project.model.User;
@@ -18,7 +19,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/quiz-attempts")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*") // Allow frontend (e.g. http://localhost:5173) to access API
 public class QuizAttemptController {
 
     @Autowired
@@ -36,6 +37,7 @@ public class QuizAttemptController {
         return quizAttemptRepository.findAll();
     }
 
+    // GET single attempt by ID
     @GetMapping("/{id}")
     public ResponseEntity<QuizAttempt> getQuizAttemptById(@PathVariable int id) {
         QuizAttempt attempt = quizAttemptRepository.findById(id)
@@ -46,35 +48,58 @@ public class QuizAttemptController {
         return ResponseEntity.ok(attempt);
     }
 
-    // POST a new quiz attempt using DTO
+    // ✅ NEW: GET top attempts by subject (Leaderboard-style)
+    @GetMapping("/top")
+    public ResponseEntity<List<QuizAttemptSummaryDTO>> getTopAttemptsBySubject(@RequestParam Integer subjectId) {
+        List<QuizAttempt> attempts = quizAttemptRepository.findBySubjectIdOrderByScoreDesc(subjectId);
+
+        List<QuizAttemptSummaryDTO> summaryList = attempts.stream()
+                .map(attempt -> {
+                    QuizAttemptSummaryDTO dto = new QuizAttemptSummaryDTO();
+                    dto.setId(attempt.getId());
+
+                    // Optional defensive null check
+                    String subjectName = attempt.getSubject() != null ? attempt.getSubject().getName() : "Unknown";
+                    dto.setSubjectName(subjectName);
+
+                    dto.setScore(attempt.getScore());
+
+                    if (attempt.getStartedAt() != null && attempt.getCompletedAt() != null) {
+                        long duration = java.time.Duration.between(attempt.getStartedAt(), attempt.getCompletedAt()).getSeconds();
+                        dto.setTimeTakenInSeconds(duration);
+                    } else {
+                        dto.setTimeTakenInSeconds(0); // Default if timestamps missing
+                    }
+
+                    return dto;
+                })
+                .limit(10) // Only return top 10 scores
+                .toList();
+
+        return ResponseEntity.ok(summaryList);
+    }
+
+    // POST a new quiz attempt
     @PostMapping
     public ResponseEntity<?> createQuizAttempt(@RequestBody QuizAttemptDTO dto) {
         Optional<User> userOpt = userRepository.findById(dto.getUserId());
         Optional<Subject> subjectOpt = subjectRepository.findById(dto.getSubjectId());
 
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "User not found"));
+        if (userOpt.isEmpty() || subjectOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "User or Subject not found"));
         }
 
-        if (subjectOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Subject not found"));
-        }
-
-        QuizAttempt attempt = new QuizAttempt();
-        attempt.setScore(dto.getScore());
-        attempt.setUser(userOpt.get());
-        attempt.setSubject(subjectOpt.get());
-
-        // Set the startedAt timestamp now
+        // ✅ Create the attempt using constructor + start time
+        QuizAttempt attempt = new QuizAttempt(userOpt.get(), subjectOpt.get(), dto.getScore());
         attempt.setStartedAt(LocalDateTime.now());
 
-        quizAttemptRepository.save(attempt);
+        QuizAttempt saved = quizAttemptRepository.save(attempt);
 
-        return ResponseEntity.status(201)
-                .body(Map.of("message", "Quiz attempt created", "attemptId", attempt.getId()));
+        return ResponseEntity.status(201).body(Map.of("attemptId", saved.getId()));
     }
 
-    // PUT — mark an existing attempt as completed
+
+    // Mark attempt as complete
     @PutMapping("/{id}/complete")
     public ResponseEntity<?> markAttemptAsCompleted(@PathVariable int id) {
         Optional<QuizAttempt> attemptOpt = quizAttemptRepository.findById(id);
@@ -90,7 +115,7 @@ public class QuizAttemptController {
         return ResponseEntity.ok(Map.of("message", "Quiz marked as completed", "completedAt", attempt.getCompletedAt()));
     }
 
-    // DELETE a quiz attempt
+    // DELETE attempt
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteQuizAttempt(@PathVariable int id) {
         if (!quizAttemptRepository.existsById(id)) {

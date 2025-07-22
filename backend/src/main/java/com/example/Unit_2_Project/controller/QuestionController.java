@@ -25,10 +25,10 @@ public class QuestionController {
     @Autowired
     private SubjectRepository subjectRepository;
 
-    // GET all questions
+    // GET all questions by subject ID
     @GetMapping
-    public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+    public List<Question> getQuestionsbySubjectId(@RequestParam int subjectId) {
+        return questionRepository.findBySubject_Id(subjectId);
     }
 
     // GET a question by ID

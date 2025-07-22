@@ -8,6 +8,6 @@ public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Intege
 
     // Custom query method to find QuizAttempts by User ID
     List<QuizAttempt> findByUserId(int userId);
-
+    List<QuizAttempt> findBySubjectIdOrderByScoreDesc(Integer subjectId);
 }
 

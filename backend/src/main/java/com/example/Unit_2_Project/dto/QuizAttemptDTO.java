@@ -1,6 +1,6 @@
 package com.example.Unit_2_Project.dto;
 
-import jakarta.persistence.PrePersist;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -8,12 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class QuizAttemptDTO {
-    private Integer id;
-
-    @PrePersist
-    protected void onCreate() {
-        this.startedAt = LocalDateTime.now();
-    } // Automatically sets the startedAt timestamp when a new attempt is created
+// DTO for quiz attempt data transfer object
 
     @NotNull(message = "Score must be provided")
     private Integer score;

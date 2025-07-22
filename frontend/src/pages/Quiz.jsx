@@ -1,124 +1,109 @@
-import React from 'react';
-
-export default function Quiz() {
-  return (
-    <div>
-      <h2>Quiz</h2>
-      <p>This is where your quiz UI will go.</p>
-    </div>
-  );
-}
-
-/*
+import React, { useContext, useState, useEffect } from 'react';
 import QuestionList from '../components/QuestionList/QuestionList';
-import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import './Quiz.css'; 
+import './Quiz.css';
 
 function Quiz() {
-  const { userName, schoolName } = useContext(AuthContext); // COntext -take user imfo from AuthContext-glabal state
-  const [score, setScore] = useState(0);  // Uses state for the Score state
-  const [quizFinished, setQuizFinished] = useState(false); // Uses State for the quiz complete
-  const audioRef = useRef(null); // play audio while quizing
+  const { user } = useContext(AuthContext);
+  const [score, setScore] = useState(0);
+  const [quizFinished, setQuizFinished] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState('');
+  const [subjectList, setSubjectList] = useState([]);
+  const [quizSummary, setQuizSummary] = useState(null); // stores summary details
+ 
+
+  // Load subjects dynamically
+  useEffect(() => {
+    fetch('http://localhost:8080/api/subjects')
+      .then(res => res.json())
+      .then(data => setSubjectList(data))
+      .catch(err => {
+        console.error("Failed to fetch subjects:", err);
+        setSubjectList([]);
+      });
+  }, []);
 
 
-useEffect(() => {
-  const audio = new Audio('/music/to-frighten-121407.mp3');
-  audio.loop = true;
-  audio.volume = 0.8;
-  audioRef.current = audio;
 
-  audio.play().catch((err) => {
-    if (err.name !== 'AbortError') {
-      console.warn('Audio play failed:', err);
-    }
-  });
-
-  return () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  };
-}, []);
-
-// useEffect will run at quizFinished, score, UserName, or schoolName changes
-
-useEffect(() => {
-  if (quizFinished) {
-
-    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || []; // get existing leaderboard or empty array
-
-// Create new leaderboard entry
-    const newEntry = {
-        name: userName || 'Anonymous',
-        score,
-        schoolName: schoolName || 'Unknown'
-      };
-
-      const updated = [...leaderboard, newEntry];  // Add new entry to the leaderboard
-
-    localStorage.setItem('leaderboard', JSON.stringify(updated)); // Save updated leaderboard to localStorage
-  }
-}, [quizFinished, score, userName, schoolName]);
-
-  
-// Function resets quiz state
-const handleRetakeQuiz = () => {
+  // Retake quiz with same subject
+  const handleRetakeQuiz = () => {
     setScore(0);
     setQuizFinished(false);
+    setQuizSummary(null);
   };
+
+  // Switch subjects
+  const handleChooseSubject = () => {
+    setScore(0);
+    setQuizFinished(false);
+    setSelectedSubject('');
+    setQuizSummary(null);
+  };
+
+  // Get subject name for display
+  const currentSubjectName = subjectList.find(s => s.id === parseInt(selectedSubject))?.name || selectedSubject;
 
   return (
     <section className="quiz-page">
-      <h2 className='quiz-header'>Boolean || Learning!</h2>
+      <h2 className="quiz-header">Boolean || Learning!</h2>
+
       <div className="subject-select">
-  <label htmlFor="subject">Choose a subject:</label>
-  <select
-    id="subject"
-    value={selectedSubject}
-    onChange={(e) => setSelectedSubject(e.target.value)}
-  >
-    <option value="">-- Select a Different Subject --</option>
-    <option value="JavaScript">JavaScript</option>
-    <option value="Java">Java</option>
-    <option value="HTML/CSS">HTML/CSS</option>
-  </select>
-</div>
-      <br/>
+        <label htmlFor="subject">Choose a subject:</label>
+        <select
+          value={selectedSubject}
+          onChange={(e) => setSelectedSubject(e.target.value)}
+        >
+          <option value="">-- Select a Subject --</option>
+          {subjectList.map(subject => (
+            <option key={subject.id} value={subject.id}>
+              {subject.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <br />
+
+      {!selectedSubject ? (
+        <p>Please select a subject to begin the quiz.</p>
+      ) : quizFinished && quizSummary ? (
+        <div className="quiz-summary">
+          <h2>🎉 Great work, {user.userName}!</h2>
+          <p>
+            You completed the <b>{currentSubjectName}</b> quiz.<br />
+            Final Score: <b>{quizSummary.correct}</b> out of {quizSummary.total} questions<br />
+            {/* Duration: <b>{quizSummary.duration}</b> seconds */}
+          </p>
+
+          <div className="dashboard-actions">
+            <button onClick={handleRetakeQuiz}>🔄 Retake Quiz</button>
+            <button onClick={handleChooseSubject}>📚 Choose Another Subject</button>
+            <a href="/leaderboard" className="button-link">🏆 View Full Leaderboard</a>
+          </div>
 
 
+        </div>
+      ) : (
+        <QuestionList
+          score={score}
+          setScore={setScore}
+          setQuizFinished={setQuizFinished}
+          selectedSubject={selectedSubject}
+          user={user}
+          showSummary={(data) => {
+            setQuizFinished(true);
+            setScore(data.correct);
+            setQuizSummary(data); // contains correct, total, duration
+          }}
+        />
+      )}
 
-{!selectedSubject ? (
-  <p>Please select a subject to begin the quiz.</p>
-) : quizFinished ? (
-  <div className='quiz-goodbye'>
-    <p>Felicitaions, {userName}, Quiz completed!<br /> You had: <b>{score}</b>, answers Correct!</p>
-    <br/>
-    <br/>
-    <button onClick={handleRetakeQuiz}>Retake Quiz?</button>
-    <a href="/leaderboard" className="button-link">
-      View Leaderboard
-    </a>
-  </div>
-) : (
-  <QuestionList
-    score={score}
-    setScore={setScore}
-    setQuizFinished={setQuizFinished}
-    selectedSubject={selectedSubject}
-  />
-)}
-
-
-      <br/>
-      <br/>
-
+      <br /><br />
     </section>
-  
   );
 }
 
 export default Quiz;
-*/
+
+
+
