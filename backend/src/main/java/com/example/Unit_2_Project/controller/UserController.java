@@ -123,41 +123,75 @@ public class UserController {
         return ResponseEntity.status(201).body(user); // Return the created user
     }
 
+    // POST /api/users/signup – Creates new user and returns success message
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody UserSignupDTO userDto) {
-        // now using this in my user serivce
+        try {
+            User newUser = userService.registerUser(userDto);
 
-        return ResponseEntity.ok("User registered successfully");
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User registered successfully");
+            response.put("user", Map.of(
+                    "name", newUser.getName(),
+                    "email", newUser.getEmail(),
+                    "school", newUser.getSchool()
+            ));
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    Map.of("message", e.getMessage())
+            );
+        }
     }
 
 
-    // POST /api/users/login - Login user
+
+
+
+// POST /api/users/login – Authenticates user and returns a JWT + user info
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO loginDTO) {
-        //  Find user by email
+
+        // Step 1: Try to find a user by the provided email
         Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
 
+        // Step 2: If user exists, check password
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            // Check if the password matches (using the hashed password)
+            // Step 2a: Match raw password against hashed password using BCrypt
             if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
 
-                // Generate JWT using user email or ID
+                // Step 3: Generate JWT tied to this user's email
                 String token = jwtUtil.generateToken(user.getEmail());
 
-                // Return token in response
-                Map<String, String> response = new HashMap<>();
+                // Step 4: Create structured response containing token and user details
+                Map<String, Object> response = new HashMap<>();
                 response.put("token", token);
+                response.put("user", Map.of(
+                        "name", user.getName(),
+                        "email", user.getEmail(),
+                        "school", user.getSchool()
+                ));
 
-                return ResponseEntity.ok(response); // 200 OK with JWT
+                // Step 5: Return 200 OK with JSON payload
+                return ResponseEntity.ok(response);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+                // Step 6a: Password mismatch – return 401 Unauthorized
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Invalid password"));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+            // Step 6b: Email not found – return 401 Unauthorized
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "User not found"));
         }
     }
+
 
 
 

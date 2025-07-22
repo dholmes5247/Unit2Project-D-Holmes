@@ -14,10 +14,23 @@ export function AuthProvider({ children }) {
     if (saved) setUser(JSON.parse(saved));
   }, []);
 
-  const signup = async (data) => {
-    console.log('SIGNUP (stub):', data);
-    return true;
-  };
+const signup = async (data) => {
+  const res = await fetch('http://localhost:8080/api/users/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+
+  const body = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(body.message || 'Signup failed');
+  }
+
+  // Optionally auto-login or just confirm success
+  return true;
+};
+
 
 const login = async ({ email, password }) => {
   const res = await fetch('http://localhost:8080/api/users/login', {
@@ -32,11 +45,18 @@ const login = async ({ email, password }) => {
     throw new Error(body.message || 'Login failed');
   }
 
-  const { token: jwt, user: userData } = body;
-  setUser(userData);
-  localStorage.setItem('user', JSON.stringify(userData));
-  localStorage.setItem('token', jwt);
-};
+    const { token, user: backendUser } = body;
+
+    const transformedUser = {
+      name: backendUser.name,
+      email: backendUser.email,
+      schoolName: backendUser.school
+    };
+
+    setUser(transformedUser);
+    localStorage.setItem('user', JSON.stringify(transformedUser));
+    localStorage.setItem('token', token);
+  };
 
 
   const logout = () => {

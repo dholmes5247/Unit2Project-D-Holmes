@@ -1,88 +1,107 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from '../../hooks/useAuth'; // Custom auth hook
 
 export default function SignUpForm() {
+  // Initialize form state with empty strings (avoids uncontrolled input warnings)
   const [form, setForm] = useState({
     name: '',
-    username: '',
     email: '',
-    schoolName: '',
-    password: ''
+    username: '',
+    password: '',
+    school: ''
   });
-  const [err, setErr] = useState('');
-  const { signup } = useAuth();
-  const nav = useNavigate();
 
-  const handle = (e) =>
+  const [err, setErr] = useState(''); // Holds any error messages
+  const { signup } = useAuth();       // Signup function from auth context
+  const navigate = useNavigate();     // Used to redirect after signup
+
+  // Handle input changes and update form state
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  const submit = async (e) => {
+  // Submit signup form to backend
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErr(''); // Clear existing errors
     try {
-      await signup(form);
-      nav('/login');
+      await signup(form);    // Call signup from auth context
+      navigate('/login');    // Redirect to login after success
     } catch (error) {
-      setErr(error.message);
+      setErr(error.message); // Display error from backend
     }
   };
 
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={handleSubmit}>
       <h2>Sign Up</h2>
+
+      {/* Display error if present */}
       {err && <p style={{ color: 'red' }}>{err}</p>}
+
       <label>
-        Name
-        <input name="name" required value={form.name} onChange={handle} />
+        Name:
+        <input
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
       </label>
       <br />
+
       <label>
-        Email
+        Email:
         <input
-          name="email"
           type="email"
-          required
+          name="email"
           value={form.email}
-          onChange={handle}
+          onChange={handleChange}
+          required
         />
       </label>
       <br />
+
       <label>
-        School
-        <input
-          name="school"
-          required
-          value={form.school}
-          onChange={handle}
-        />
-      </label>
-            <br />
-      <label>
-        Username
+        Username:
         <input
           name="username"
-          required
           value={form.username}
-          onChange={handle}
-        />
-      </label>
-      <br />
-      <label>
-        Password
-        <input
-          name="password"
-          type="password"
+          onChange={handleChange}
           required
-          value={form.password}
-          onChange={handle}
         />
       </label>
       <br />
+
+      <label>
+        Password:
+        <input
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        School:
+        <input
+          name="school"
+          value={form.school}
+          onChange={handleChange}
+          required
+        />
+      </label>
+      <br />
+
       <button type="submit">Sign Up</button>
     </form>
   );
 }
+
 
 
 /*import React, { useState } from 'react';

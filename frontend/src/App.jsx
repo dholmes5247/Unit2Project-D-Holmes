@@ -19,6 +19,7 @@ export default function App() {
       <main style={{ padding: '1rem' }}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignUpForm />} />
           
@@ -31,7 +32,7 @@ export default function App() {
             }
           />
           <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/about" element={<About />} />
+          
         </Routes>
       </main>
       <Footer />
