@@ -31,6 +31,9 @@ public class QuizAttempt {
     private LocalDateTime startedAt;
     private LocalDateTime completedAt;
 
+    @Column(nullable = true)
+    private Integer duration;
+
     // calculating seconds for time taken
     public long getTimeTakenInSeconds() {
         if (this.startedAt != null && this.completedAt != null) {

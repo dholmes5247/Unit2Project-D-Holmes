@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -50,7 +51,7 @@ public class QuizAttemptController {
 
     // ✅ NEW: GET top attempts by subject (Leaderboard-style)
     @GetMapping("/top")
-    public ResponseEntity<List<QuizAttemptSummaryDTO>> getTopAttemptsBySubject(@RequestParam Integer subjectId) {
+    public ResponseEntity<List<QuizAttemptDTO>> getTopAttemptsBySubject(@RequestParam Integer subjectId) {
         List<QuizAttempt> attempts = quizAttemptRepository.findBySubjectIdOrderByScoreDesc(subjectId);
 
         List<QuizAttemptSummaryDTO> summaryList = attempts.stream()
@@ -68,12 +69,13 @@ public class QuizAttemptController {
                         long duration = java.time.Duration.between(attempt.getStartedAt(), attempt.getCompletedAt()).getSeconds();
                         dto.setTimeTakenInSeconds(duration);
                     } else {
-                        dto.setTimeTakenInSeconds(0); // Default if timestamps missing
+                        dto.setTimeTakenInSeconds(0L); // Default to 0 if not available
+
                     }
 
                     return dto;
                 })
-                .limit(10) // Only return top 10 scores
+                .limit(15) // Only return top 15 scores
                 .toList();
 
         return ResponseEntity.ok(summaryList);
@@ -82,22 +84,49 @@ public class QuizAttemptController {
     // POST a new quiz attempt
     @PostMapping
     public ResponseEntity<?> createQuizAttempt(@RequestBody QuizAttemptDTO dto) {
-        Optional<User> userOpt = userRepository.findById(dto.getUserId());
-        Optional<Subject> subjectOpt = subjectRepository.findById(dto.getSubjectId());
+        try {
+            Optional<User> userOpt = userRepository.findById(dto.getUserId());
+            Optional<Subject> subjectOpt = subjectRepository.findById(dto.getSubjectId());
 
-        if (userOpt.isEmpty() || subjectOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "User or Subject not found"));
+            if (userOpt.isEmpty() || subjectOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "User or Subject not found"));
+            }
+
+            User user = userOpt.get();          // Managed entity
+            Subject subject = subjectOpt.get(); // Managed entity
+
+            QuizAttempt attempt = new QuizAttempt();
+            attempt.setUser(user);                             // Link managed user
+            attempt.setSubject(subject);                       // Link managed subject
+            attempt.setScore(dto.getScore());
+            attempt.setStartedAt(dto.getStartedAt() != null ? dto.getStartedAt() : LocalDateTime.now());
+            attempt.setCompletedAt(dto.getCompletedAt() != null ? dto.getCompletedAt() : LocalDateTime.now());
+
+            if (dto.getCompletedAt() != null && dto.getStartedAt() != null) {
+                Duration duration = Duration.between(dto.getStartedAt(), dto.getCompletedAt());
+                attempt.setDuration((int) duration.getSeconds());
+            } else {
+                attempt.setDuration(Math.toIntExact(dto.getDuration()));
+
+            }
+
+            QuizAttempt saved = quizAttemptRepository.save(attempt);
+
+//  Populate summary from saved attempt
+            QuizAttemptSummaryDTO summary = new QuizAttemptSummaryDTO();
+            summary.setId(saved.getId());
+            summary.setSubjectName(saved.getSubject().getName());
+            summary.setScore(saved.getScore());
+            summary.setTimeTakenInSeconds((saved.getTimeTakenInSeconds()));
+
+            return ResponseEntity.status(201).body(summary);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "An unexpected error occurred: " + e.getMessage()));
         }
-
-        // ✅ Create the attempt using constructor + start time
-        QuizAttempt attempt = new QuizAttempt(userOpt.get(), subjectOpt.get(), dto.getScore());
-        attempt.setStartedAt(LocalDateTime.now());
-
-        QuizAttempt saved = quizAttemptRepository.save(attempt);
-
-        return ResponseEntity.status(201).body(Map.of("attemptId", saved.getId()));
     }
-
 
     // Mark attempt as complete
     @PutMapping("/{id}/complete")

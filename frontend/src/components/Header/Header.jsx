@@ -16,7 +16,7 @@ export default function Header() {
     <header className="site-header">
       <nav>
         <Link to="/">Home</Link> |{' '}
-        <Link to="/">About</Link> |{' '}
+        <Link to="/about">About</Link> |{' '}
         <Link to="/quiz">Quiz</Link> |{' '}
         <Link to="/leaderboard">Leaderboard</Link> |{' '}
         {isAuthenticated ? (

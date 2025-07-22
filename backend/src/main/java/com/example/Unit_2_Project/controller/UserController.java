@@ -147,50 +147,48 @@ public class UserController {
     }
 
 
-
-
-
 // POST /api/users/login – Authenticates user and returns a JWT + user info
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO loginDTO) {
+@PostMapping("/login")
+public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO loginDTO) {
 
-        // Step 1: Try to find a user by the provided email
-        Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
+    // 🔍 Step 1: Find the user by email
+    Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
 
-        // Step 2: If user exists, check password
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            // Step 2a: Match raw password against hashed password using BCrypt
-            if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-
-                // Step 3: Generate JWT tied to this user's email
-                String token = jwtUtil.generateToken(user.getEmail());
-
-                // Step 4: Create structured response containing token and user details
-                Map<String, Object> response = new HashMap<>();
-                response.put("token", token);
-                response.put("user", Map.of(
-                        "name", user.getName(),
-                        "email", user.getEmail(),
-                        "school", user.getSchool()
-                ));
-
-                // Step 5: Return 200 OK with JSON payload
-                return ResponseEntity.ok(response);
-            } else {
-                // Step 6a: Password mismatch – return 401 Unauthorized
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("message", "Invalid password"));
-            }
-        } else {
-            // Step 6b: Email not found – return 401 Unauthorized
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "User not found"));
-        }
+    if (optionalUser.isEmpty()) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "User not found"));
     }
+
+    User user = optionalUser.get();
+
+    // 🔐 Step 2: Verify password
+    if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid password"));
+    }
+
+    // 🧠 Step 3: Generate JWT
+    String token = jwtUtil.generateToken(user.getEmail());
+
+    // ✨ Step 4: Build a full UserProfileDTO to send to frontend
+    UserProfileDTO profileDTO = new UserProfileDTO();
+    profileDTO.setId(user.getId()); // ✅ This line ensures user.id is available in the frontend
+    profileDTO.setUsername(user.getName());
+    profileDTO.setEmail(user.getEmail());
+    profileDTO.setSchool(user.getSchool()); // if applicable
+    profileDTO.setQuizAttempts(List.of());  // optionally populate later
+
+    // 🚀 Step 5: Return token + full user profile as response
+    Map<String, Object> response = new HashMap<>();
+    response.put("token", token);
+    response.put("user", profileDTO); // 👈 This replaces the manual Map and ensures full user data
+
+    return ResponseEntity.ok(response);
+}
+
+
 
 
 

@@ -4,12 +4,9 @@ import lombok.Data;
 
 @Data
 public class QuizAttemptSummaryDTO {
-
-    private int id; // Quiz attempt ID
-
-    private String subjectName; // Human-readable name of the subject
-
-    private int score; // Final score
-
-    private long timeTakenInSeconds; // Time taken to complete quiz
+    private Integer id;
+    private String subjectName;
+    private Integer score;
+    private Long timeTakenInSeconds;
 }
+
