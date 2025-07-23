@@ -45,7 +45,7 @@ public class User {
     private String password;
 
     @NotBlank(message = "School is required.")
-    @Size(min = 3, max = 100, message = "School name must be between 3 and 100 characters.")
+    @Size(min = 2, max = 100, message = "School name must be between 3 and 100 characters.")
     @Column(nullable = false)
     private String school;
 

@@ -61,7 +61,7 @@ useEffect(() => {
       <th>School</th>
       <th>Subject</th>
       <th>Score</th>
-      <th>Time (sec)</th>
+      <th>Duration</th>
     </tr>
   </thead>
   <tbody>
@@ -72,9 +72,10 @@ useEffect(() => {
         <td>{entry.user?.school || "N/A"}</td>
         <td>{entry.subject?.name || "Unknown"}</td>
         <td>{entry.score}</td>
-        <td>
-            {Math.floor(entry.timeTakenInSeconds / 60)}m {entry.timeTakenInSeconds % 60}s
+        <td title={`${entry.duration} sec`}>
+            {Math.floor(entry.duration / 60)}m {entry.duration % 60}s
         </td>
+
 
       </tr>
     ))}

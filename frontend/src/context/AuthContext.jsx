@@ -15,6 +15,8 @@ export function AuthProvider({ children }) {
 
   // 📝 Step 2: Signup logic (optional auto-login later)
   const signup = async (data) => {
+    console.log("SIGNUP DATA:", data);
+
     const res = await fetch('http://localhost:8080/api/users/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -22,7 +24,7 @@ export function AuthProvider({ children }) {
     });
 
     const body = await res.json().catch(() => ({}));
-
+console.log("🧾 Backend login response:", body);
     if (!res.ok) {
       throw new Error(body.message || 'Signup failed');
     }

@@ -52,7 +52,7 @@ public class UserController {
     }
 
     // GET /api/users/{id} - Get a user by ID
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable int id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
@@ -65,7 +65,7 @@ public class UserController {
     }
 
     // GET user profile including quiz attempt summary
-    @GetMapping("/{id}/profile")
+    @GetMapping("/id/{id}/profile")
     public ResponseEntity<Object> getUserProfile(@PathVariable int id) {
         Optional<User> optionalUser = userRepository.findById(id);
 
@@ -194,7 +194,7 @@ public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO l
 
 
     // PUT /api/users/{id} - Update an existing user
-    @PutMapping("/{id}")
+    @PutMapping("/id/{id}")
     public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         Optional<User> optional = userRepository.findById(id);
         if (optional.isPresent()) {
@@ -215,7 +215,7 @@ public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO l
     }
 
     // DELETE /api/users/{id} - Delete a user
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
