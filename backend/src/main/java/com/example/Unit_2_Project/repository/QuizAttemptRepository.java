@@ -34,6 +34,10 @@ public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Intege
 
     // Still valid for user history
     List<QuizAttempt> findByUserId(int userId);
+
+    List<QuizAttempt> findByUserIdOrderByScoreDescDurationAsc(Integer userId);
+
+    List<QuizAttempt> findAllByOrderByScoreDescDurationAsc();
 }
 
 

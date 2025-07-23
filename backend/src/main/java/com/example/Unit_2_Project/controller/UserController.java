@@ -52,7 +52,7 @@ public class UserController {
     }
 
     // GET /api/users/{id} - Get a user by ID
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable int id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
@@ -65,7 +65,7 @@ public class UserController {
     }
 
     // GET user profile including quiz attempt summary
-    @GetMapping("/id/{id}/profile")
+    @GetMapping("/{id}/profile")
     public ResponseEntity<Object> getUserProfile(@PathVariable int id) {
         Optional<User> optionalUser = userRepository.findById(id);
 

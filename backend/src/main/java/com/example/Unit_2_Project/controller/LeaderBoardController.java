@@ -8,73 +8,76 @@ import com.example.Unit_2_Project.dto.SubjectDTO;
 import com.example.Unit_2_Project.dto.UserDTO;
 import com.example.Unit_2_Project.model.QuizAttempt;
 import com.example.Unit_2_Project.repository.QuizAttemptRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/leaderboard")
-@RequiredArgsConstructor
+@CrossOrigin(origins = "*") // Allow frontend (e.g. http://localhost:5173) to access API
+@AllArgsConstructor
 public class LeaderBoardController {
 
-    private final QuizAttemptRepository quizAttemptRepository;
+    @Autowired
+    private QuizAttemptRepository quizAttemptRepo;
 
-    // GET /leaderboard?subjectId=1
-    @GetMapping
-    public ResponseEntity<List<LeaderBoardEntryDTO>> getLeaderboardBySubject(@RequestParam Integer subjectId) {
-        List<LeaderBoardEntryDTO> leaderboard = quizAttemptRepository.findLeaderboardBySubject(subjectId);
-        return ResponseEntity.ok(leaderboard);
+    @GetMapping("/top")
+    public ResponseEntity<List<QuizAttemptDTO>> getTopScores() {
+        List<QuizAttempt> attempts =
+                quizAttemptRepo.findAllByOrderByScoreDescDurationAsc();
+        List<QuizAttemptDTO> dtoList = attempts.stream()
+                .map(this::mapToDto)              // ← now this resolves
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
     }
 
-    // NEW: GET top attempts by subject (Leaderboard-style)
-    @GetMapping("/top")
-    public ResponseEntity<List<QuizAttemptDTO>> getTopAttempts(@RequestParam(required = false) Integer subjectId) {
-        List<QuizAttempt> attempts;
-
-        // Conditional fetch based on subjectId
-        if (subjectId != null) {
-            attempts = quizAttemptRepository.findBySubjectIdOrderByScoreDescDurationAsc(subjectId);
-        } else {
-            attempts = quizAttemptRepository.findTop20ByOrderByScoreDescDurationAsc();
-        }
-
-        // Manual DTO mapping with embedded user + subject info
+    @GetMapping("/subject/{subjectId}")
+    public ResponseEntity<List<QuizAttemptDTO>> getBySubject(
+            @PathVariable Integer subjectId) {
+        List<QuizAttempt> attempts =
+                quizAttemptRepo.findBySubjectIdOrderByScoreDescDurationAsc(subjectId);
         List<QuizAttemptDTO> dtoList = attempts.stream()
-                .map(attempt -> {
-                    QuizAttemptDTO dto = new QuizAttemptDTO();
-                    dto.setId(attempt.getId());
-                    dto.setScore(attempt.getScore());
-                    dto.setDuration(attempt.getDuration() != null ? attempt.getDuration() : 0); // or use timeTakenInSeconds
-                    dto.setTimeTakenInSeconds(dto.getDuration());
-                    dto.setStartedAt(attempt.getStartedAt());
-                    dto.setCompletedAt(attempt.getCompletedAt());
-
-                    if (attempt.getUser() != null) {
-                        UserDTO userDTO = new UserDTO();
-                        userDTO.setId(attempt.getUser().getId());
-                        userDTO.setUsername(attempt.getUser().getUsername());
-                        userDTO.setSchool(attempt.getUser().getSchool());
-                        dto.setUser(userDTO);
-                    }
-
-                    if (attempt.getSubject() != null) {
-                        SubjectDTO subjectDTO = new SubjectDTO();
-                        subjectDTO.setId(attempt.getSubject().getId());
-                        subjectDTO.setName(attempt.getSubject().getName());
-                        dto.setSubject(subjectDTO);
-                    }
-
-                    return dto;
-                })
-                .limit(20)
-                .toList();
-
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<QuizAttemptDTO>> getByUser(
+            @PathVariable Integer userId) {
+        List<QuizAttempt> attempts =
+                quizAttemptRepo.findByUserIdOrderByScoreDescDurationAsc(userId);
+        List<QuizAttemptDTO> dtoList = attempts.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
+    }
+
+    // ─── Helper: Convert Entity → DTO ───────────────────────────
+    private QuizAttemptDTO mapToDto(QuizAttempt attempt) {
+        QuizAttemptDTO dto = new QuizAttemptDTO();
+        dto.setId(attempt.getId());
+        dto.setScore(attempt.getScore());
+        dto.setDuration(attempt.getDuration());
+
+        // Map nested User → UserDTO
+        UserDTO u = new UserDTO();
+        u.setId(attempt.getUser().getId());
+        u.setUsername(attempt.getUser().getUsername());
+        u.setSchool(attempt.getUser().getSchool());
+        dto.setUser(u);
+
+        // Map nested Subject → SubjectDTO
+        SubjectDTO s = new SubjectDTO();
+        s.setId(attempt.getSubject().getId());
+        s.setName(attempt.getSubject().getName());
+        dto.setSubject(s);
+
+        return dto;
     }
 }
 
