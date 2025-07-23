@@ -42,9 +42,19 @@ console.log("🧾 Backend login response:", body);
 
     const body = await res.json().catch(() => ({}));
 
-    if (!res.ok) {
-      throw new Error(body.message || 'Login failed');
-    }
+if (!res.ok) {
+  let message = 'Login failed.';
+
+  if (res.status === 404) {
+    message = 'No account exists with that email.';
+  } else if (res.status === 401) {
+    message = 'Invalid password. Please try again.';
+  }
+
+  throw new Error(message);
+}
+
+
 
     
 

@@ -1,12 +1,32 @@
 package com.example.Unit_2_Project.repository;
 
+import com.example.Unit_2_Project.dto.LeaderBoardEntryDTO;
 import com.example.Unit_2_Project.model.QuizAttempt;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Integer> {
+    // 🌟 Featured Leaderboard Query: Filter by Subject
+    @Query("""
+    SELECT new com.example.Unit_2_Project.dto.LeaderBoardEntryDTO(
+        u.username,
+        s.name,
+        a.score,
+        a.totalQuestions,
+        a.timeTakenInSeconds,
+        a.completedAt
+    )
+    FROM QuizAttempt a
+    JOIN a.user u
+    JOIN a.subject s
+    WHERE s.id = :subjectId
+    ORDER BY a.score DESC, a.timeTakenInSeconds ASC
+""")
+    List<LeaderBoardEntryDTO> findLeaderboardBySubject(@Param("subjectId") Integer subjectId);
 
-    // Now valid: Sort by score, then duration (actual entity field)
+    // Sort by score, then duration (actual entity field)
     List<QuizAttempt> findTop20ByOrderByScoreDescDurationAsc();
 
     // Subject-specific variant, optional for later filters
