@@ -11,11 +11,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LeaderBoardEntryDTO {
-    private String username;  // Username of the user
-    private String subjectName; // Name of the subject
-    private Integer score;        // Score of the user
+    private String username;
+    private String subjectName;
+    private Integer score;
     private Integer totalQuestions;
-    private Long timeTakenInSeconds; // Time taken by the user in seconds
-    private LocalDateTime attemptDate; // Date and time of the attempt
+    private Long duration;  // duration in seconds
+    private LocalDateTime attemptDate;
+
 
 }
+

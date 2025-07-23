@@ -32,7 +32,7 @@ public class QuizAttempt {
     private LocalDateTime completedAt;
 
     @Column(nullable = true)
-    private Integer duration;
+    private Long duration;
 
     // calculating seconds for time taken
     public long getTimeTakenInSeconds() {

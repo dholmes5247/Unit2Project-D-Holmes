@@ -15,14 +15,14 @@ public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Intege
         s.name,
         a.score,
         a.totalQuestions,
-        a.timeTakenInSeconds,
+        a.duration,
         a.completedAt
     )
     FROM QuizAttempt a
     JOIN a.user u
     JOIN a.subject s
     WHERE s.id = :subjectId
-    ORDER BY a.score DESC, a.timeTakenInSeconds ASC
+    ORDER BY a.score DESC, a.duration ASC
 """)
     List<LeaderBoardEntryDTO> findLeaderboardBySubject(@Param("subjectId") Integer subjectId);
 

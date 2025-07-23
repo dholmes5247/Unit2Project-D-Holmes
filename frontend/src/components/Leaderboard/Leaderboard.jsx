@@ -9,7 +9,7 @@ const Leaderboard = () => {
 
   //  Fetch leaderboard data 
 useEffect(() => {
-  fetch("http://localhost:8080/api/quiz-attempts/top")
+  fetch("http://localhost:8080/api/leaderboard/top")
     .then(res => res.json())    
     .then(data => {
       console.log("Fetched leaderboard:", data); // log this to see whats there
