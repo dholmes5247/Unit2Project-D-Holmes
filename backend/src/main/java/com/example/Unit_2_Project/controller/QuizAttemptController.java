@@ -1,12 +1,11 @@
 package com.example.Unit_2_Project.controller;
 
 import com.example.Unit_2_Project.dto.QuizAttemptDTO;
-import com.example.Unit_2_Project.dto.QuizAttemptSummaryDTO;
+
 import com.example.Unit_2_Project.dto.SubjectDTO;
 import com.example.Unit_2_Project.dto.UserDTO;
 import com.example.Unit_2_Project.model.QuizAttempt;
-import com.example.Unit_2_Project.model.Subject;
-import com.example.Unit_2_Project.model.User;
+
 import com.example.Unit_2_Project.repository.QuizAttemptRepository;
 import com.example.Unit_2_Project.repository.SubjectRepository;
 import com.example.Unit_2_Project.repository.UserRepository;
@@ -40,7 +39,7 @@ public class QuizAttemptController {
         return quizAttemptRepository.findAll();
     }
 
-    // GET single attempt by ID
+/*    // GET single attempt by ID
     @GetMapping("/{id}")
     public ResponseEntity<QuizAttempt> getQuizAttemptById(@PathVariable int id) {
         QuizAttempt attempt = quizAttemptRepository.findById(id)
@@ -50,7 +49,7 @@ public class QuizAttemptController {
                 ));
         return ResponseEntity.ok(attempt);
     }
-
+*/
     // ✅ NEW: GET top attempts by subject (Leaderboard-style)
     @GetMapping("/top")
     public ResponseEntity<List<QuizAttemptDTO>> getTopAttempts(@RequestParam(required = false) Integer subjectId) {
@@ -102,7 +101,7 @@ public class QuizAttemptController {
 
 
     // POST a new quiz attempt
-    @PostMapping("/quiz-attempts")
+    @PostMapping
     public ResponseEntity<?> submitAttempt(@RequestBody QuizAttemptDTO attemptDTO) {
         try {
             // Extract userId safely
@@ -128,6 +127,7 @@ public class QuizAttemptController {
             attempt.setStartedAt(attemptDTO.getStartedAt());
             attempt.setCompletedAt(attemptDTO.getCompletedAt());
             attempt.setDuration(duration.intValue()); // ✅ clean and explicit
+            attempt.setTotalQuestions(attemptDTO.getTotalQuestions());
 
 
             // 🔧 You can fetch full User and Subject entities here if needed

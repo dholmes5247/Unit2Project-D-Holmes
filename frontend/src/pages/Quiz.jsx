@@ -81,6 +81,7 @@ function Quiz() {
 
 {selectedSubject && quizFinished && quizSummary && (
   quizSummary.exitedEarly ? (
+    
     <div className="quiz-summary">
       <h2>🚪 You exited the quiz early.</h2>
       <p>No attempt was saved.</p>
@@ -91,12 +92,21 @@ function Quiz() {
     </div>
   ) : (
     <div className="quiz-summary">
+
+      
+
       <h2>🎉 Great work, {user?.userName || user?.name || "Learner"}!</h2>
       <p>
         Subject: <b>{quizSummary.subject?.name || currentSubjectName}</b><br />
-        Score: <b>{quizSummary.score}</b> / <b>{quizSummary.totalQuestions || "?"}</b> (<b>{Math.round((quizSummary.score / quizSummary.totalQuestions) * 100)}%</b>)<br />
-        Duration: <b>{quizSummary.duration || 0}</b> seconds
-      </p>
+        Score: <b>{quizSummary.score}</b> / <b>{quizSummary.totalQuestions || "?"}</b>
+  (<b>
+    {quizSummary.totalQuestions && quizSummary.totalQuestions > 0
+      ? `${Math.round((quizSummary.score / quizSummary.totalQuestions) * 100)}%`
+      : "N/A%"}
+  </b>)<br />
+  Duration: <b>{quizSummary.duration || 0}</b> seconds
+</p>
+
       <p>
         Started: <b>{quizSummary.startedAt ? new Date(quizSummary.startedAt).toLocaleString() : "N/A"}</b><br />
         Completed: <b>{quizSummary.completedAt ? new Date(quizSummary.completedAt).toLocaleString() : "N/A"}</b>

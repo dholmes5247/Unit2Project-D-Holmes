@@ -13,6 +13,7 @@ public class QuizAttemptDTO {
     private long timeTakenInSeconds;
     private LocalDateTime startedAt;
     private LocalDateTime completedAt;
+    private Integer totalQuestions; // total number of questions in the quiz
     // Directly reflect duration in seconds
     private int duration;
     private UserDTO user; // include full user info

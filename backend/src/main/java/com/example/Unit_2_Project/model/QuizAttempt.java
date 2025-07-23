@@ -41,6 +41,8 @@ public class QuizAttempt {
         }
         return 0;
     }
+    @Column(name = "total_questions", nullable = false)
+    private Integer totalQuestions;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -60,6 +62,8 @@ public class QuizAttempt {
     @EqualsAndHashCode.Exclude
     @JsonManagedReference
     private List<QuizAttemptQuestion> quizAttemptQuestions = new ArrayList<>();
+
+
 
     // Convenience method to keep both sides of the relationship in sync
     public void addAttemptQuestion(QuizAttemptQuestion attemptQuestion) {

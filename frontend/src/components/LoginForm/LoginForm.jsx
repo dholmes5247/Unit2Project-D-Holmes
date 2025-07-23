@@ -48,7 +48,17 @@ export default function LoginForm() {
       </label>
       <br />
       <button type="submit">Log In</button>
+      <p>
+  Don't have an account yet?{' '}
+  <button onClick={() => nav('/signup')} className="secondary-button">
+  ✍️ Sign Up Instead
+</button>
+</p>
+
+
     </form>
+
+    
   );
 }
 

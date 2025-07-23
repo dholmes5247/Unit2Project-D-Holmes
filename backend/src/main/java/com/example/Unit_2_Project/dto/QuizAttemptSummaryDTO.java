@@ -8,5 +8,7 @@ public class QuizAttemptSummaryDTO {
     private String subjectName;
     private Integer score;
     private Long timeTakenInSeconds;
+    private Integer totalQuestions;
+
 }
 

@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
 
   // 📝 Step 2: Signup logic (optional auto-login later)
   const signup = async (data) => {
-    console.log("SIGNUP DATA:", data);
+    
 
     const res = await fetch('http://localhost:8080/api/users/signup', {
       method: 'POST',
