@@ -6,8 +6,14 @@ import java.util.List;
 
 public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Integer> {
 
-    // Custom query method to find QuizAttempts by User ID
+    // Now valid: Sort by score, then duration (actual entity field)
+    List<QuizAttempt> findTop20ByOrderByScoreDescDurationAsc();
+
+    // Subject-specific variant, optional for later filters
+    List<QuizAttempt> findBySubjectIdOrderByScoreDescDurationAsc(Integer subjectId);
+
+    // Still valid for user history
     List<QuizAttempt> findByUserId(int userId);
-    List<QuizAttempt> findBySubjectIdOrderByScoreDesc(Integer subjectId);
 }
+
 

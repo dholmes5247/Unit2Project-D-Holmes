@@ -2,6 +2,8 @@ package com.example.Unit_2_Project.controller;
 
 import com.example.Unit_2_Project.dto.QuizAttemptDTO;
 import com.example.Unit_2_Project.dto.QuizAttemptSummaryDTO;
+import com.example.Unit_2_Project.dto.SubjectDTO;
+import com.example.Unit_2_Project.dto.UserDTO;
 import com.example.Unit_2_Project.model.QuizAttempt;
 import com.example.Unit_2_Project.model.Subject;
 import com.example.Unit_2_Project.model.User;
@@ -51,82 +53,95 @@ public class QuizAttemptController {
 
     // ✅ NEW: GET top attempts by subject (Leaderboard-style)
     @GetMapping("/top")
-    public ResponseEntity<List<QuizAttemptDTO>> getTopAttemptsBySubject(@RequestParam Integer subjectId) {
-        List<QuizAttempt> attempts = quizAttemptRepository.findBySubjectIdOrderByScoreDesc(subjectId);
+    public ResponseEntity<List<QuizAttemptDTO>> getTopAttempts(@RequestParam(required = false) Integer subjectId) {
+        List<QuizAttempt> attempts;
 
-        List<QuizAttemptSummaryDTO> summaryList = attempts.stream()
+        // ✅ Conditional fetch based on subjectId
+        if (subjectId != null) {
+            attempts = quizAttemptRepository.findBySubjectIdOrderByScoreDescDurationAsc(subjectId);
+        } else {
+            attempts = quizAttemptRepository.findTop20ByOrderByScoreDescDurationAsc();
+        }
+
+        // ✅ Manual DTO mapping with embedded user + subject info
+        List<QuizAttemptDTO> dtoList = attempts.stream()
                 .map(attempt -> {
-                    QuizAttemptSummaryDTO dto = new QuizAttemptSummaryDTO();
+                    QuizAttemptDTO dto = new QuizAttemptDTO();
                     dto.setId(attempt.getId());
-
-                    // Optional defensive null check
-                    String subjectName = attempt.getSubject() != null ? attempt.getSubject().getName() : "Unknown";
-                    dto.setSubjectName(subjectName);
-
                     dto.setScore(attempt.getScore());
+                    dto.setDuration(attempt.getDuration() != null ? attempt.getDuration() : 0); // or use timeTakenInSeconds
+                    dto.setTimeTakenInSeconds(dto.getDuration());
+                    dto.setStartedAt(attempt.getStartedAt());
+                    dto.setCompletedAt(attempt.getCompletedAt());
 
-                    if (attempt.getStartedAt() != null && attempt.getCompletedAt() != null) {
-                        long duration = java.time.Duration.between(attempt.getStartedAt(), attempt.getCompletedAt()).getSeconds();
-                        dto.setTimeTakenInSeconds(duration);
-                    } else {
-                        dto.setTimeTakenInSeconds(0L); // Default to 0 if not available
+                    if (attempt.getUser() != null) {
+                        UserDTO userDTO = new UserDTO();
+                        userDTO.setId(attempt.getUser().getId());
+                        userDTO.setUsername(attempt.getUser().getUsername());
+                        userDTO.setSchool(attempt.getUser().getSchool());
+                        dto.setUser(userDTO);
+                    }
 
+                    if (attempt.getSubject() != null) {
+                        SubjectDTO subjectDTO = new SubjectDTO();
+                        subjectDTO.setId(attempt.getSubject().getId());
+                        subjectDTO.setName(attempt.getSubject().getName());
+                        dto.setSubject(subjectDTO);
                     }
 
                     return dto;
                 })
-                .limit(15) // Only return top 15 scores
+                .limit(20)
                 .toList();
 
-        return ResponseEntity.ok(summaryList);
+        return ResponseEntity.ok(dtoList);
     }
 
+
+
+
+
     // POST a new quiz attempt
-    @PostMapping
-    public ResponseEntity<?> createQuizAttempt(@RequestBody QuizAttemptDTO dto) {
+    @PostMapping("/quiz-attempts")
+    public ResponseEntity<?> submitAttempt(@RequestBody QuizAttemptDTO attemptDTO) {
         try {
-            Optional<User> userOpt = userRepository.findById(dto.getUserId());
-            Optional<Subject> subjectOpt = subjectRepository.findById(dto.getSubjectId());
-
-            if (userOpt.isEmpty() || subjectOpt.isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "User or Subject not found"));
+            // Extract userId safely
+            Integer userId = attemptDTO.getUser() != null ? attemptDTO.getUser().getId() : null;
+            if (userId == null) {
+                return ResponseEntity.badRequest().body("Missing user ID.");
             }
 
-            User user = userOpt.get();          // Managed entity
-            Subject subject = subjectOpt.get(); // Managed entity
+            // Extract subjectId safely
+            Integer subjectId = attemptDTO.getSubject() != null ? attemptDTO.getSubject().getId() : null;
+            if (subjectId == null) {
+                return ResponseEntity.badRequest().body("Missing subject ID.");
+            }
 
+            // ✅ Calculate duration or use provided timeTakenInSeconds
+            Long duration = (attemptDTO.getStartedAt() != null && attemptDTO.getCompletedAt() != null)
+                    ? Duration.between(attemptDTO.getStartedAt(), attemptDTO.getCompletedAt()).getSeconds()
+                    : attemptDTO.getTimeTakenInSeconds();
+
+            // ✅ Construct new QuizAttempt entity
             QuizAttempt attempt = new QuizAttempt();
-            attempt.setUser(user);                             // Link managed user
-            attempt.setSubject(subject);                       // Link managed subject
-            attempt.setScore(dto.getScore());
-            attempt.setStartedAt(dto.getStartedAt() != null ? dto.getStartedAt() : LocalDateTime.now());
-            attempt.setCompletedAt(dto.getCompletedAt() != null ? dto.getCompletedAt() : LocalDateTime.now());
+            attempt.setScore(attemptDTO.getScore());
+            attempt.setStartedAt(attemptDTO.getStartedAt());
+            attempt.setCompletedAt(attemptDTO.getCompletedAt());
+            attempt.setDuration(duration.intValue()); // ✅ clean and explicit
 
-            if (dto.getCompletedAt() != null && dto.getStartedAt() != null) {
-                Duration duration = Duration.between(dto.getStartedAt(), dto.getCompletedAt());
-                attempt.setDuration((int) duration.getSeconds());
-            } else {
-                attempt.setDuration(Math.toIntExact(dto.getDuration()));
 
-            }
+            // 🔧 You can fetch full User and Subject entities here if needed
+            attempt.setUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
+            attempt.setSubject(subjectRepository.findById(subjectId).orElseThrow(() -> new RuntimeException("Subject not found")));
 
             QuizAttempt saved = quizAttemptRepository.save(attempt);
 
-//  Populate summary from saved attempt
-            QuizAttemptSummaryDTO summary = new QuizAttemptSummaryDTO();
-            summary.setId(saved.getId());
-            summary.setSubjectName(saved.getSubject().getName());
-            summary.setScore(saved.getScore());
-            summary.setTimeTakenInSeconds((saved.getTimeTakenInSeconds()));
-
-            return ResponseEntity.status(201).body(summary);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(Map.of("error", "An unexpected error occurred: " + e.getMessage()));
+            return ResponseEntity.ok(saved); // or map back to DTO if needed
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving attempt: " + ex.getMessage());
         }
     }
+
 
     // Mark attempt as complete
     @PutMapping("/{id}/complete")

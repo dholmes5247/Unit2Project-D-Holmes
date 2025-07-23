@@ -5,20 +5,23 @@ import albertTongue from "../../assets/images/Albert__tongue.jpg";
 
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState('');
+  
 
-  // ✅ Fetch leaderboard data when subject changes
-  useEffect(() => {
-    if (selectedSubject) {
-      fetch(`http://localhost:8080/api/quiz-attempts/top?subjectId=${selectedSubject}`)
-        .then(res => res.json())
-        .then(data => setLeaderboard(data))
-        .catch(err => {
-          console.error("Leaderboard fetch failed:", err);
-          setLeaderboard([]);
-        });
-    }
-  }, [selectedSubject]);
+  //  Fetch leaderboard data 
+useEffect(() => {
+  fetch("http://localhost:8080/api/quiz-attempts/top")
+    .then(res => res.json())    
+    .then(data => {
+      console.log("Fetched leaderboard:", data); // log this to see whats there
+      setLeaderboard(data)
+})
+    .catch(err => {
+      console.error("Leaderboard fetch failed:", err);
+      
+      setLeaderboard([]);
+    });
+}, []); // No subject dependency
+
 
   return (
     <div className="leaderboard-page">
@@ -47,31 +50,43 @@ const Leaderboard = () => {
       <div className="leaderboard-body">
         <h2>🏆 Leaderboard</h2>
 
-        {/* Subject Filter Dropdown */}
-        <select
-          value={selectedSubject}
-          onChange={(e) => setSelectedSubject(e.target.value)}
-        >
-          <option value="">-- Choose a Subject --</option>
-          <option value="1">JavaScript</option>
-          <option value="2">Spring Boot</option>
-          {/* 🔧 You can fetch and render subjects dynamically if needed */}
-        </select>
 
         {/* Score List */}
-        {selectedSubject && (
-          <ul className="leaderboard-list">
-            {leaderboard.length ? (
-              leaderboard.map((entry, idx) => (
-                <li key={idx}>
-                  🧑 Attempt #{entry.id} — Score: <b>{entry.score}</b> — ⏱ {entry.timeTakenInSeconds} sec
-                </li>
-              ))
-            ) : (
-              <p>No scores available for this subject.</p>
-            )}
-          </ul>
-        )}
+        {leaderboard.length ? (
+<table className="leaderboard-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Username</th>
+      <th>School</th>
+      <th>Subject</th>
+      <th>Score</th>
+      <th>Time (sec)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {leaderboard.map((entry, idx) => (
+      <tr key={entry.id}>
+        <td>{idx + 1}</td>
+        <td>{entry.user?.username || "Anonymous"}</td>
+        <td>{entry.user?.school || "N/A"}</td>
+        <td>{entry.subject?.name || "Unknown"}</td>
+        <td>{entry.score}</td>
+        <td>
+            {Math.floor(entry.timeTakenInSeconds / 60)}m {entry.timeTakenInSeconds % 60}s
+        </td>
+
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+) : (
+  <p>No leaderboard data available yet.</p>
+)}
+
+          
+        
       </div>
     </div>
   );

@@ -8,15 +8,17 @@ import java.time.LocalDateTime;
 
 @Data
 public class QuizAttemptDTO {
-// DTO for quiz attempt data transfer object
-    private Integer score;
-    private Integer userId;
-    private Integer subjectId;
+    private int id;
+    private int score;
+    private long timeTakenInSeconds;
     private LocalDateTime startedAt;
     private LocalDateTime completedAt;
-    private Long duration;
-    private String school;
+    // Directly reflect duration in seconds
+    private int duration;
+    private UserDTO user; // include full user info
+    private SubjectDTO subject;
 }
+
 
 //DTO assumes the user ID and subject ID from the frontend instead of full objects.
 // expand it later to include timestamps, etc.
