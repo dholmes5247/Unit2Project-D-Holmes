@@ -1,12 +1,4 @@
-/* General Reset & Font */
-* {
-  font-family: Arial, Helvetica, sans-serif;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* CSS Variables for Theming */
+/* ─────────── CSS VARIABLES FOR THEMING ─────────── */
 :root {
   --bg-color: #ffffff;
   --text-color: #000000;
@@ -17,71 +9,79 @@ body.dark-mode {
   --text-color: #f0f0f0;
 }
 
-/* Full Height Layout */
-html, body {
+/* ─────────── GLOBAL RESET & FONT ─────────── */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ─────────── BASE STYLES ─────────── */
+html, body {
   min-height: 100%;
   background-color: var(--bg-color);
   color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Layout Container */
+/* ─────────── APP STRUCTURE ─────────── */
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Main Content Area */
 .main-content {
   flex: 1;
   padding: 20px;
   overflow-x: hidden;
 }
 
-/* Content Area with Animated Background */
+/* ─────────── ANIMATED BACKGROUND LAYER ─────────── */
 .content-area {
   position: relative;
   flex: 1;
   z-index: 0;
 }
 
-/* Background Image Overlay */
 .content-area::before {
   content: '';
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background-image: url('/images/binaryBackground.jpg');
+  background-image: url('/src/assets/images/binaryBackground.jpg');
   background-size: cover;
   background-repeat: repeat-y;
   background-position: center 0;
-  opacity: 0.35;
-  filter: brightness(0.5);
+  opacity: 0.2;                 /* ⬅ softened from 0.35 */
+  filter: brightness(0.8);      /* ⬅ brighter than 0.5 */
   z-index: -1;
-  animation: scrollBackground 15s linear infinite;
+  animation: scrollBackground 25s linear infinite;
+  pointer-events: none;
 }
 
-/* Scroll Animation */
+
 @keyframes scrollBackground {
   0% {
     background-position: center 0;
   }
   100% {
-    background-position: center 1000px; /* Adjust for speed/length */
+    background-position: center 1000px;
   }
 }
 
-/* Header & Footer */
+/* ─────────── HEADER & FOOTER STYLING ─────────── */
 header, footer {
   z-index: 1;
   position: relative;
   background-color: var(--bg-color);
   color: var(--text-color);
+  padding: 1rem;
 }
 
-
+/* ─────────── VISUAL DEBUGGING (Optional) ─────────── */
 header, .content-area, footer {
-  border: 1px dashed red; 
+  border: 1px dashed red; /* Remove or tweak later */
 }
+
 

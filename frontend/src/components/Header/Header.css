@@ -1,8 +1,12 @@
+/* ───────────── HEADER STYLES ───────────── */
+
 .site-header {
+  /* Adds subtle shadow behind header text */
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
 }
 
 .navbar {
+  /* Flex layout for header section */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -10,50 +14,73 @@
   padding: 2rem;
   background-color: #221063;
   color: #ffffff;
-  font-size: 1.2rem;
-}
-
-.welcome-message {
-  text-align: left;
-  max-width: 100%;
 }
 
 .app-title {
+  /* Branding/title text styling */
   font-size: 1.6rem;
   font-weight: bold;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25);
 }
 
 .userName {
+  /* Fancy animated greeting for signed-in user */
   color: #f5f542;
-  font-weight: bolder;
-  font-size: 1.5rem;
+  font-weight: bold;
+  font-size: 1.3rem;
   font-style: oblique;
   text-decoration: underline;
-  margin-top: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-left: 20px;
-  opacity: 0;
   animation: fadeInSlide 1.5s ease forwards;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
 }
 
 .sign-in-prompt {
+  /* Pulsing effect for login/signup links */
   animation: pulse 2s infinite;
   font-weight: bold;
-  border-radius: 4px;
   color: #f5f542;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-style: oblique;
   text-decoration: underline;
-  margin-top: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
   cursor: pointer;
-  display: inline-block;
 }
 
-/* Animations */
+.nav-links {
+  /* Navigation list layout */
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  /* Underline on hover for nav links */
+  text-decoration: underline;
+}
+
+.logout-button {
+  /* Red logout button with hover effect */
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+/* ───────────── ANIMATIONS ───────────── */
+
 @keyframes fadeInSlide {
   0% {
     opacity: 0;
@@ -61,7 +88,7 @@
   }
   50% {
     opacity: 1;
-    transform: translateY(10px) scale(1.25); /* temporarily grows */
+    transform: translateY(10px) scale(1.25);
   }
   100% {
     opacity: 1;
@@ -78,63 +105,20 @@
   }
 }
 
-/* Nav links */
-.nav-links {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-   padding: 0;
-  margin: 0;
-}
-
-.nav-links a {
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.nav-links a:hover {
-  text-decoration: underline;
-}
-
-/* Logout button */
-.logout-button {
-  animation: pulse 2s infinite;
-  background-color: #e74c3c;
-  border: none;
-  color: white;
-  padding: 0.5em 1em;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.logout-button:hover {
-  background-color: #c0392b;
-}
-
-.signInLink {
-  animation: pulse 2s infinite;
-  border-radius: 5px;
-}
-
+/* ───────────── RESPONSIVE ───────────── */
 
 @media (max-width: 750px) {
   .navbar {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
-  .nav-links {
-    justify-content: center;
-  }
-
-  .sign-in-prompt,
-  .userName {
+  .userName,
+  .sign-in-prompt {
     text-align: center;
-    margin-left: 0;
   }
 }
+
 
 
 

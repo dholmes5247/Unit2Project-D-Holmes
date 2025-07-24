@@ -9,14 +9,18 @@ import About           from './pages/About';
 import LoginForm       from './components/LoginForm/LoginForm';
 import SignUpForm      from './components/SignUpForm/SignUpForm';
 import Leaderboard     from './components/Leaderboard/Leaderboard';
+import './App.css';
 
 
 
 export default function App() {
   return (
     <>
+    <div className="app-container">
       <Header />
+      <div className="content-area">
       <main style={{ padding: '1rem' }}>
+      
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -35,6 +39,8 @@ export default function App() {
           
         </Routes>
       </main>
+      </div>
+      </div>
       <Footer />
     </>
   );
