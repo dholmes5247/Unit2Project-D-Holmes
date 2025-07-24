@@ -3,22 +3,30 @@
 .site-header {
   /* Adds subtle shadow behind header text */
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  background-color: #221063; /* fallback for navbar background */
 }
 
 .navbar {
-  /* Flex layout for header section */
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  background: linear-gradient(to right, #221063, #34217d);
   padding: 2rem;
-  background-color: #221063;
-  color: #ffffff;
+  width: 100%;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .app-title {
   /* Branding/title text styling */
   font-size: 1.6rem;
+  text-decoration: underline;
   font-weight: bold;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25);
 }
@@ -29,7 +37,7 @@
   font-weight: bold;
   font-size: 1.3rem;
   font-style: oblique;
-  text-decoration: underline;
+  
   animation: fadeInSlide 1.5s ease forwards;
   text-transform: uppercase;
   margin-top: 0.5rem;

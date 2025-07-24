@@ -53,10 +53,10 @@ html, body {
   background-size: cover;
   background-repeat: repeat-y;
   background-position: center 0;
-  opacity: 0.2;                 /* ⬅ softened from 0.35 */
-  filter: brightness(0.8);      /* ⬅ brighter than 0.5 */
+  opacity: 0.3;                 /* ⬅ softened from 0.35 */
+  filter: brightness(0.55);      /* ⬅ brighter than 0.5 */
   z-index: -1;
-  animation: scrollBackground 25s linear infinite;
+  animation: scrollBackground 15s linear infinite;
   pointer-events: none;
 }
 

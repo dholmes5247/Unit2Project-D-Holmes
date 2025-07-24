@@ -18,6 +18,7 @@ export default function App() {
     <>
     <div className="app-container">
       <Header />
+      
       <div className="content-area">
       <main style={{ padding: '1rem' }}>
       

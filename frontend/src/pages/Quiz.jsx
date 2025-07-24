@@ -14,6 +14,7 @@ function Quiz() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [subjectList, setSubjectList] = useState([]);
   const [quizSummary, setQuizSummary] = useState(null); // stores backend response after quiz completes
+  const [isLoading, setIsLoading] = useState(false);
 
   // ✅ Load available subjects on mount
   useEffect(() => {
@@ -25,6 +26,18 @@ function Quiz() {
         setSubjectList([]);
       });
   }, []);
+
+  useEffect(() => {
+  if (selectedSubject && !quizFinished) {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // 1.5 seconds static flicker
+
+    return () => clearTimeout(timer);
+  }
+}, [selectedSubject, quizFinished]);
+
 
   const resetQuizState = () => {
   setScore(0);
@@ -38,10 +51,10 @@ function Quiz() {
 
   // ✅ Handle switching subjects
   const handleChooseSubject = () => {
-    resetQuizState();    
-    setSelectedSubject('');
-    
-  };
+  setSelectedSubject('');
+  setQuizFinished(false);
+  setQuizSummary(null);
+};
 
 
 
@@ -49,102 +62,109 @@ function Quiz() {
   const currentSubjectName =
     subjectList.find(s => s.id === parseInt(selectedSubject))?.name || selectedSubject;
 
+
   return (
-    <section className="quiz-page">
-      <h2 className="quiz-header">Boolean || Learning!</h2>
-      
-      
+  <section className="quiz-page">
+    <h2 className="quiz-header">Boolean || Learning!</h2>
+    <div className="quiz-wrapper">
+      <div className="tv-frame">
 
-      {/* ✅ Subject selection dropdown */}
-      <div className="subject-select">
-        <label htmlFor="subject">Choose a subject:</label>
-        <select
-          value={selectedSubject}
-          onChange={(e) => setSelectedSubject(e.target.value)}
-        >
-          <option value="">-- Select a Subject --</option>
-          {subjectList.map(subject => (
-            <option key={subject.id} value={subject.id}>
-              {subject.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        {isLoading ? (
+          <div className="static-screen">
+            <p className="flicker-text">📡 Tuning in...</p>
+          </div>
+        ) : (
+          <>
+            {/* ✅ Subject selection or subject display */}
+            {!selectedSubject || (quizFinished && !quizSummary) ? (
+              <div className="subject-select">
+                <label htmlFor="subject">Choose a subject:</label>
+                <select
+                  value={selectedSubject}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                >
+                  <option value="">-- Select a Subject --</option>
+                  {subjectList.map(subject => (
+                    <option key={subject.id} value={subject.id}>
+                      {subject.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <p className="selected-subject">
+                Subject: <b>{quizSummary?.subject?.name || currentSubjectName}</b>
+              </p>
+            )}
 
+            {/* ✅ Message before quiz starts */}
+            {!selectedSubject && <p>Please select a subject to begin the quiz.</p>}
 
+            {/* ✅ Quiz Summary */}
+            {selectedSubject && quizFinished && quizSummary && (
+              quizSummary.exitedEarly ? (
+                <div className="quiz-summary">
+                  <h2>🚪 You exited the quiz early.</h2>
+                  <p>No attempt was saved.</p>
+                  <div className="dashboard-actions">
+                    <button onClick={handleRetakeQuiz}>🔄 Start Over</button>
+                    <button onClick={handleChooseSubject}>📚 Choose Another Subject</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="quiz-summary">
+                  <h2>🎉 Great work, {user?.userName || user?.name || "Learner"}!</h2>
+                  <p>
+                    Subject: <b>{quizSummary.subject?.name || currentSubjectName}</b><br />
+                    Score: <b>{quizSummary.score}</b> / <b>{quizSummary.totalQuestions || "?"}</b>
+                    (<b>
+                      {quizSummary.totalQuestions && quizSummary.totalQuestions > 0
+                        ? `${Math.round((quizSummary.score / quizSummary.totalQuestions) * 100)}%`
+                        : "N/A%"}
+                    </b>)<br />
+                    Duration: <b>{quizSummary.duration || 0}</b> seconds
+                  </p>
+                  <p>
+                    Started: <b>{quizSummary.startedAt ? new Date(quizSummary.startedAt).toLocaleString() : "N/A"}</b><br />
+                    Completed: <b>{quizSummary.completedAt ? new Date(quizSummary.completedAt).toLocaleString() : "N/A"}</b>
+                  </p>
+                  <div className="dashboard-actions">
+                    <button onClick={handleRetakeQuiz}>🔄 Retake Quiz</button>
+                    <button onClick={handleChooseSubject}>📚 Choose Another Subject</button>
+                    <a href="/leaderboard" className="button-link">🏆 View Leaderboard</a>
+                  </div>
+                </div>
+              )
+            )}
 
-      {/* ✅ Conditional rendering based on state */}
-      {!selectedSubject && (
-        <p>Please select a subject to begin the quiz.</p>
-      )}
-
-
-{selectedSubject && quizFinished && quizSummary && (
-  quizSummary.exitedEarly ? (
-    
-    <div className="quiz-summary">
-      <h2>🚪 You exited the quiz early.</h2>
-      <p>No attempt was saved.</p>
-      <div className="dashboard-actions">
-        <button onClick={handleRetakeQuiz}>🔄 Start Over</button>
-        <button onClick={handleChooseSubject}>📚 Choose Another Subject</button>
+            {/* ✅ Live Quiz View */}
+            {selectedSubject && !quizFinished && (
+              <QuestionList
+                score={score}
+                setScore={setScore}
+                setQuizFinished={setQuizFinished}
+                selectedSubject={selectedSubject}
+                user={user}
+                showSummary={(attemptObj) => {
+                  if (!attemptObj) {
+                    setScore(0);
+                    setQuizSummary(null);
+                    setQuizFinished(true);
+                    return;
+                  }
+                  setScore(attemptObj.score || attemptObj.correct || 0);
+                  setQuizSummary(attemptObj);
+                  setQuizFinished(true);
+                }}
+              />
+            )}
+          </>
+        )}
       </div>
     </div>
-  ) : (
-    <div className="quiz-summary">
+  </section>
+);
 
-      
-
-      <h2>🎉 Great work, {user?.userName || user?.name || "Learner"}!</h2>
-      <p>
-        Subject: <b>{quizSummary.subject?.name || currentSubjectName}</b><br />
-        Score: <b>{quizSummary.score}</b> / <b>{quizSummary.totalQuestions || "?"}</b>
-  (<b>
-    {quizSummary.totalQuestions && quizSummary.totalQuestions > 0
-      ? `${Math.round((quizSummary.score / quizSummary.totalQuestions) * 100)}%`
-      : "N/A%"}
-  </b>)<br />
-  Duration: <b>{quizSummary.duration || 0}</b> seconds
-</p>
-
-      <p>
-        Started: <b>{quizSummary.startedAt ? new Date(quizSummary.startedAt).toLocaleString() : "N/A"}</b><br />
-        Completed: <b>{quizSummary.completedAt ? new Date(quizSummary.completedAt).toLocaleString() : "N/A"}</b>
-      </p>
-      <div className="dashboard-actions">
-        <button onClick={handleRetakeQuiz}>🔄 Retake Quiz</button>
-        <button onClick={handleChooseSubject}>📚 Choose Another Subject</button>
-        <a href="/leaderboard" className="button-link">🏆 View Leaderboard</a>
-      </div>
-    </div>
-  )
-)}
-
-
-      {selectedSubject && !quizFinished && (
-        <QuestionList
-          score={score}
-          setScore={setScore}
-          setQuizFinished={setQuizFinished}
-          selectedSubject={selectedSubject}
-          user={user}
-          showSummary={(attemptObj) => {
-             if (!attemptObj) {
-            // User exited early — don’t set anything
-            setScore(0);
-            setQuizSummary(null);
-            setQuizFinished(true);
-            return;
-  }
-            // ✅ Called from QuestionList after quiz finishes
-            setScore(attemptObj.score || attemptObj.correct || 0);
-            setQuizSummary(attemptObj); // full QuizAttempt from backend
-            setQuizFinished(true);
-          }}
-        />
-      )}
-    </section>
-  );
 }
 
 export default Quiz;
