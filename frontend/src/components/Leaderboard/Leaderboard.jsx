@@ -19,7 +19,7 @@ const [subjects, setSubjects] = useState([]);
 
 const [page, setPage] = useState(0);      // Tracks current page
 const [pageSize] = useState(15);          // Fixed size per page
-
+const [hasNextPage, setHasNextPage] = useState(true);
 
   // Get the logged-in user (if any) from context
   const { user } = useContext(AuthContext);
@@ -41,6 +41,9 @@ useEffect(() => {
     .then(data => {
       console.log("Paged leaderboard:", data);
       setLeaderboard(data);
+      // If empty result on a page > 0, then there are no more pages
+      setHasNextPage(data.length > 0 || page === 0);
+      
     })
     .catch(err => {
       console.error("Leaderboard fetch failed:", err);
@@ -114,29 +117,31 @@ useEffect(() => {
           </div>
         )}
 
-          {view === 'top' && (
+{/* Pagination shown for both Top Scores and My Stats */}
+{(view === 'top' || view === 'user') && (
   <div className="leaderboard-pagination">
-    <button onClick={() => setPage(p => Math.max(p - 1, 0))} disabled={page === 0}>
+    <button
+      onClick={() => setPage(p => Math.max(p - 1, 0))}
+      disabled={page === 0}
+    >
       ⬅ Previous
     </button>
-    <span>Page {page + 1}</span>
-    <button onClick={() => setPage(p => p + 1)}>
+
+    <span>
+      Page {page + 1}
+      {!hasNextPage ? ' (Last Page)' : ''}
+    </span>
+
+    <button
+      onClick={() => setPage(p => p + 1)}
+      disabled={!hasNextPage}
+    >
       Next ➡
     </button>
   </div>
 )}
 
-    {view === 'user' && leaderboard.length > 0 && (
-  <div className="pagination">
-    <button onClick={() => setPage(p => Math.max(p - 1, 0))} disabled={page === 0}>
-      ⬅ Prev
-    </button>
-    <span>Page {page + 1}</span>
-    <button onClick={() => setPage(p => p + 1)}>
-      Next ➡
-    </button>
-  </div>
-)}
+
     
 
         {/* Render the leaderboard table or a fallback message */}
