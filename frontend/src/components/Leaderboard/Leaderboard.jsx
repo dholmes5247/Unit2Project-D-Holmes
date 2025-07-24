@@ -3,6 +3,7 @@ import './Leaderboard.css';
 import albertTongue from '../../assets/images/Albert__tongue.jpg';
 import { AuthContext } from '../../context/AuthContext';
 
+
 const Leaderboard = () => {
   // State to hold the fetched leaderboard entries
   const [leaderboard, setLeaderboard] = useState([]);
@@ -16,36 +17,38 @@ const Leaderboard = () => {
   // Holds the list of all subjects for the dropdown
 const [subjects, setSubjects] = useState([]);
 
+const [page, setPage] = useState(0);      // Tracks current page
+const [pageSize] = useState(15);          // Fixed size per page
+
 
   // Get the logged-in user (if any) from context
   const { user } = useContext(AuthContext);
 
-  // Fetch leaderboard data whenever `view`, `subjectId`, or `user` changes
-  useEffect(() => {
-    // Determine base endpoint based on active view
-    let endpoint = 'http://localhost:8080/api/leaderboard/top';
+useEffect(() => {
+  let endpoint = `http://localhost:8080/api/leaderboard/top?page=${page}&size=${pageSize}`;
 
-    if (view === 'subject' && subjectId) {
-      endpoint = `http://localhost:8080/api/leaderboard/subject/${subjectId}`;
-    } else if (view === 'user' && user?.id) {
-      endpoint = `http://localhost:8080/api/leaderboard/user/${user.id}`;
-    }
+  if (view === 'subject' && subjectId) {
+    endpoint = `http://localhost:8080/api/leaderboard/subject/${subjectId}`;
+  } else if (view === 'user' && user?.id) {
+    endpoint = `http://localhost:8080/api/leaderboard/user/${user.id}?page=${page}&size=${pageSize}`;
+  }
 
-    // Perform fetch and update state
-    fetch(endpoint)
-      .then(res => {
-        if (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        console.log('Fetched leaderboard:', data);
-        setLeaderboard(data);
-      })
-      .catch(err => {
-        console.error('Leaderboard fetch failed:', err);
-        setLeaderboard([]);
-      });
-  }, [view, subjectId, user]);
+  fetch(endpoint)
+    .then(res => {
+      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log("Paged leaderboard:", data);
+      setLeaderboard(data);
+    })
+    .catch(err => {
+      console.error("Leaderboard fetch failed:", err);
+      setLeaderboard([]);
+    });
+}, [view, subjectId, user, page, pageSize]);
+
+
 
   useEffect(() => {
   fetch('http://localhost:8080/api/subjects')
@@ -110,6 +113,31 @@ const [subjects, setSubjects] = useState([]);
             </select>
           </div>
         )}
+
+          {view === 'top' && (
+  <div className="leaderboard-pagination">
+    <button onClick={() => setPage(p => Math.max(p - 1, 0))} disabled={page === 0}>
+      ⬅ Previous
+    </button>
+    <span>Page {page + 1}</span>
+    <button onClick={() => setPage(p => p + 1)}>
+      Next ➡
+    </button>
+  </div>
+)}
+
+    {view === 'user' && leaderboard.length > 0 && (
+  <div className="pagination">
+    <button onClick={() => setPage(p => Math.max(p - 1, 0))} disabled={page === 0}>
+      ⬅ Prev
+    </button>
+    <span>Page {page + 1}</span>
+    <button onClick={() => setPage(p => p + 1)}>
+      Next ➡
+    </button>
+  </div>
+)}
+    
 
         {/* Render the leaderboard table or a fallback message */}
         {leaderboard.length > 0 ? (

@@ -2,6 +2,8 @@ package com.example.Unit_2_Project.repository;
 
 import com.example.Unit_2_Project.dto.LeaderBoardEntryDTO;
 import com.example.Unit_2_Project.model.QuizAttempt;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,7 +39,10 @@ public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Intege
 
     List<QuizAttempt> findByUserIdOrderByScoreDescDurationAsc(Integer userId);
 
-    List<QuizAttempt> findAllByOrderByScoreDescDurationAsc();
+    // List<QuizAttempt> findAllByOrderByScoreDescDurationAsc();
+    Page<QuizAttempt> findAllByOrderByScoreDescDurationAsc(Pageable pageable);
+    Page<QuizAttempt> findByUserIdOrderByScoreDescDurationAsc(Integer userId, Pageable pageable);
+
 }
 
 
