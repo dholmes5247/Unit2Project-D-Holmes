@@ -1,9 +1,14 @@
 /* ───────────── FOOTER STYLES ───────────── */
 
 .footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem;
   background-color: #221063;
   color: white;
   padding: 1rem;
+
 }
 
 .footer-content {

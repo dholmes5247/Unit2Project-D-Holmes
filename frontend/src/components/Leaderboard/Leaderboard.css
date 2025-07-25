@@ -5,30 +5,32 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 5px;
-  gap: 40px;
+  padding: 8px;
+  gap: 30px;
 }
 
 /* ========== Sidebar ========== */
 .sidebar {
-  flex: 0 0 300px;
-  margin: 45px 0 0 20px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 80px;
+  
+  
+  max-width: 280px;
+  margin: auto;
 }
+
 
 .quote {
   font-family: 'Dancing Script', cursive;
   font-size: 1.75rem;
+  padding-bottom: 30px;
   font-weight: bold;
   color: #000;
   line-height: 1.25;
   text-align: center;
   border-radius: 8px;
   letter-spacing: 0.5px;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.55);
+  text-shadow: 3px 3px 6px rgba(169, 168, 168, 0.55);
 }
 
 body.dark-mode .quote {
@@ -70,6 +72,9 @@ body.dark-mode .quote {
   }
 }
 
+
+
+
 /* ========== Leaderboard ========== */
 .home-right {
   display: flex;
@@ -79,32 +84,109 @@ body.dark-mode .quote {
 }
 
 .leaderboard {
-  flex: 2;
-  background: #f9f9f9;
-  padding: 20px;
-  border: 2px solid black;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-  filter: brightness(0.9);
- 
+  background: rgba(255, 255, 255, 0.04);
+  
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 12px var(--tv-screen-glow, #9e8eff);
+  border-radius: 10px;
 }
 
+
 .leaderboard h2 {
-  background-color: rgba(175, 166, 166, 0.8);
+  background-color: rgba(223, 89, 89, 0.8);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   display: inline-block;
-  font-size: 1.75rem;
+  font-size: 1.95rem;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.35);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
+.leaderboard-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.leaderboard-toggle {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.leaderboard-toggle button {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  background-color: #a2c542;
+  color: #fff;
+  border: none;
+  box-shadow: 0 0 8px #7c6cd9;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.leaderboard-pagination button {
+  padding: 0.6rem 1rem;
+  min-width: 100px;
+  max-height: 100px;
+  font-size: 0.95rem;
+  border-radius: 20px;
+  background-color: #1d8e26; /* Forest green shade */
+  color: white;
+  border: none;
+  box-shadow: 0 0 8px rgba(23, 125, 87, 0.7);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.leaderboard-pagination button:hover {
+  background-color: #23a173;
+  transform: scale(1.05);
+}
+
+
+.leaderboard-toggle button:hover,
+.leaderboard-pagination button:hover {
+  background-color: #4c39a2;
+  transform: scale(1.05);
+}
+
+.leaderboard-pagination span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+
+
 /* ========== Table ========== */
+
 .leaderboard table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 6px;
+  border-spacing: 0 .5px;
+  
 }
+
+.leaderboard-header {
+  font-size: 2rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  text-align: center;
+  background-color: rgba(162, 51, 51, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 0 8px var(--tv-screen-glow);
+  margin-bottom: 1rem;
+}
+
+
+
 
 .leaderboard thead {
   font-weight: bold;
@@ -118,7 +200,7 @@ body.dark-mode .quote {
 .leaderboard td {
   padding: 10px;
   text-align: left;
-  font-size: 1rem;
+  font-size: .9rem;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
   border-bottom: 1px solid #ddd;
 }

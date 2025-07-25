@@ -9,7 +9,7 @@ function Quiz() {
   const { user } = useContext(AuthContext);
 
   // ✅ Core state for scoring, flow, and summary rendering
-  const [score, setScore] = useState(0);
+  const [ score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState('');
   const [subjectList, setSubjectList] = useState([]);
@@ -63,7 +63,7 @@ function Quiz() {
     subjectList.find(s => s.id === parseInt(selectedSubject))?.name || selectedSubject;
 
 
-  return (
+return (
   <section className="quiz-page">
     <h2 className="quiz-header">Boolean || Learning!</h2>
     <div className="quiz-wrapper">
@@ -75,21 +75,27 @@ function Quiz() {
           </div>
         ) : (
           <>
-            {/* ✅ Subject selection or subject display */}
-            {!selectedSubject || (quizFinished && !quizSummary) ? (
-              <div className="subject-select">
-                <label htmlFor="subject">Choose a subject:</label>
-                <select
-                  value={selectedSubject}
-                  onChange={(e) => setSelectedSubject(e.target.value)}
-                >
-                  <option value="">-- Select a Subject --</option>
-                  {subjectList.map(subject => (
-                    <option key={subject.id} value={subject.id}>
-                      {subject.name}
-                    </option>
-                  ))}
-                </select>
+            {/* ✅ Subject Selection or Subject Display */}
+            {!selectedSubject ? (
+              <div className="tv-static-wrapper">
+                <video autoPlay loop muted className="tv-static-video">
+                  <source src="/static-loop.mp4" type="video/mp4" />
+                </video>
+
+                <div className="subject-overlay">
+                  <label htmlFor="subject">📡 Choose Your Channel:</label>
+                  <select
+                    value={selectedSubject}
+                    onChange={(e) => setSelectedSubject(e.target.value)}
+                  >
+                    <option value="">-- Select a Subject --</option>
+                    {subjectList.map(subject => (
+                      <option key={subject.id} value={subject.id}>
+                        {subject.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             ) : (
               <p className="selected-subject">
@@ -99,6 +105,29 @@ function Quiz() {
 
             {/* ✅ Message before quiz starts */}
             {!selectedSubject && <p>Please select a subject to begin the quiz.</p>}
+
+
+            {selectedSubject && !quizFinished && (
+  <QuestionList
+    score={score}
+    setScore={setScore}
+    setQuizFinished={setQuizFinished}
+    selectedSubject={selectedSubject}
+    user={user}
+    showSummary={(attemptObj) => {
+      if (!attemptObj) {
+        setScore(0);
+        setQuizSummary(null);
+        setQuizFinished(true);
+        return;
+      }
+      setScore(attemptObj.score || attemptObj.correct || 0);
+      setQuizSummary(attemptObj);
+      setQuizFinished(true);
+    }}
+  />
+)}
+
 
             {/* ✅ Quiz Summary */}
             {selectedSubject && quizFinished && quizSummary && (
@@ -112,54 +141,41 @@ function Quiz() {
                   </div>
                 </div>
               ) : (
-                <div className="quiz-summary">
-                  <h2>🎉 Great work, {user?.userName || user?.name || "Learner"}!</h2>
-                  <p>
-                    Subject: <b>{quizSummary.subject?.name || currentSubjectName}</b><br />
-                    Score: <b>{quizSummary.score}</b> / <b>{quizSummary.totalQuestions || "?"}</b>
-                    (<b>
-                      {quizSummary.totalQuestions && quizSummary.totalQuestions > 0
-                        ? `${Math.round((quizSummary.score / quizSummary.totalQuestions) * 100)}%`
-                        : "N/A%"}
-                    </b>)<br />
-                    Duration: <b>{quizSummary.duration || 0}</b> seconds
-                  </p>
-                  <p>
-                    Started: <b>{quizSummary.startedAt ? new Date(quizSummary.startedAt).toLocaleString() : "N/A"}</b><br />
-                    Completed: <b>{quizSummary.completedAt ? new Date(quizSummary.completedAt).toLocaleString() : "N/A"}</b>
-                  </p>
+                <div className="screen-content">
+                  <div className="quiz-summary">
+                    <h2>Great work, {user?.userName || user?.name || "Learner"}!</h2>
+
+                    <div className="score-display">
+                      <p>
+                        Subject: <b>{quizSummary.subject?.name || currentSubjectName}</b><br />
+                        Score: <b>{quizSummary.score}</b> / <b>{quizSummary.totalQuestions || "?"}</b>
+                        (<b>
+                          {quizSummary.totalQuestions && quizSummary.totalQuestions > 0
+                            ? `${Math.round((quizSummary.score / quizSummary.totalQuestions) * 100)}%`
+                            : "N/A%"}
+                        </b>)<br />
+                        Duration: <b>{quizSummary.duration || 0}</b> seconds
+                      </p>
+                      <p>
+                        Started: <b>{quizSummary.startedAt ? new Date(quizSummary.startedAt).toLocaleString() : "N/A"}</b><br />
+                        Completed: <b>{quizSummary.completedAt ? new Date(quizSummary.completedAt).toLocaleString() : "N/A"}</b>
+                      </p>
+                    </div>
+                  </div>
+
                   <div className="dashboard-actions">
                     <button onClick={handleRetakeQuiz}>🔄 Retake Quiz</button>
-                    <button onClick={handleChooseSubject}>📚 Choose Another Subject</button>
-                    <a href="/leaderboard" className="button-link">🏆 View Leaderboard</a>
+                    <button onClick={handleChooseSubject}>📚 Another Subject?</button>
+                    <a href="/leaderboard" className="button-link">🏆 View Leaderboard 🏆</a>
                   </div>
                 </div>
               )
             )}
 
-            {/* ✅ Live Quiz View */}
-            {selectedSubject && !quizFinished && (
-              <QuestionList
-                score={score}
-                setScore={setScore}
-                setQuizFinished={setQuizFinished}
-                selectedSubject={selectedSubject}
-                user={user}
-                showSummary={(attemptObj) => {
-                  if (!attemptObj) {
-                    setScore(0);
-                    setQuizSummary(null);
-                    setQuizFinished(true);
-                    return;
-                  }
-                  setScore(attemptObj.score || attemptObj.correct || 0);
-                  setQuizSummary(attemptObj);
-                  setQuizFinished(true);
-                }}
-              />
-            )}
           </>
+
         )}
+
       </div>
     </div>
   </section>
@@ -168,3 +184,4 @@ function Quiz() {
 }
 
 export default Quiz;
+

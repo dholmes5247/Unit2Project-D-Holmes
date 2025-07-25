@@ -31,7 +31,7 @@ export default function Footer() {
           </div>
 
           <div className="footer-text email">
-            Contact us: <a href="mailto:info@holmesfarm.dev">info@holmesfarm.dev</a>
+            Contact us: <a href="mailto:dholmes5247@hotmail.com">dholmes5247@hotmail.com</a>
           </div>
 
           <button className="dark-toggle" onClick={toggleTheme}>

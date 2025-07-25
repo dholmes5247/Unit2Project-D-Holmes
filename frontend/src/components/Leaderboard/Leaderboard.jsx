@@ -18,7 +18,7 @@ const Leaderboard = () => {
 const [subjects, setSubjects] = useState([]);
 
 const [page, setPage] = useState(0);      // Tracks current page
-const [pageSize] = useState(15);          // Fixed size per page
+const [pageSize] = useState(10);          // Fixed size per page
 const [hasNextPage, setHasNextPage] = useState(true);
 
   // Get the logged-in user (if any) from context
@@ -64,33 +64,35 @@ useEffect(() => {
 }, []);
 
 
-  return (
-    <div className="leaderboard-page">
-      {/* Sidebar with Einstein quote */}
-      <div className="sidebar">
-        <div className="quote">
-          "Logic will get you from A to B, BUT imagination will take you EVERYWHERE."
-          <div className="signature">- Albert Einstein</div>
-        </div>
-        <a
-          href="https://en.wikipedia.org/wiki/Albert_Einstein"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Learn more about Einstein"
-          className="albert-link"
-        >
-          <img
-            src={albertTongue}
-            alt="Albert Einstein sticking out his tongue"
-            className="albert-img"
-          />
-        </a>
+return (
+  <div className="leaderboard-body">
+    {/* Sidebar with Einstein quote */}
+    <div className="sidebar">
+      <div className="quote">
+        "Logic will get you from A to B, BUT imagination will take you EVERYWHERE."
+        <div className="signature">- Albert Einstein</div>
       </div>
+      <a
+        href="https://en.wikipedia.org/wiki/Albert_Einstein"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Learn more about Einstein"
+        className="albert-link"
+      >
+        <img
+          src={albertTongue}
+          alt="Albert Einstein sticking out his tongue"
+          className="albert-img"
+        />
+      </a>
+    </div>
 
-      {/* Main leaderboard content */}
-      <div className="leaderboard-body">
-        <h2>🏆 Leaderboard</h2>
+    {/* Main leaderboard content */}
+    <div className="leaderboard">
+      <h2 className="leaderboard-header">🏆 Leaderboard 🏆</h2>
 
+      {/* Controls: view toggles, subject filter, pagination */}
+      <div className="leaderboard-controls">
         {/* View toggle buttons */}
         <div className="leaderboard-toggle">
           <button onClick={() => setView('top')}>Top Scores</button>
@@ -108,82 +110,78 @@ useEffect(() => {
               onChange={e => setSubjectId(e.target.value)}
             >
               <option value="">-- All Subjects --</option>
-                  {subjects.map(s => (
-                  <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
+              {subjects.map(s => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
             </select>
           </div>
         )}
 
-{/* Pagination shown for both Top Scores and My Stats */}
-{(view === 'top' || view === 'user') && (
-  <div className="leaderboard-pagination">
-    <button
-      onClick={() => setPage(p => Math.max(p - 1, 0))}
-      disabled={page === 0}
-    >
-      ⬅ Previous
-    </button>
+        {/* Pagination (shown for Top Scores and My Stats views) */}
+        {(view === 'top' || view === 'user') && (
+          <div className="leaderboard-pagination">
+            <button
+              onClick={() => setPage(p => Math.max(p - 1, 0))}
+              disabled={page === 0}
+            >
+              ⬅ Prev
+            </button>
 
-    <span>
-      Page {page + 1}
-      {!hasNextPage ? ' (Last Page)' : ''}
-    </span>
+            &nbsp;<span>
+              Page {page + 1}
+              {!hasNextPage ? ' (Last Page)' : ''}
+            </span>&nbsp;
 
-    <button
-      onClick={() => setPage(p => p + 1)}
-      disabled={!hasNextPage}
-    >
-      Next ➡
-    </button>
-  </div>
-)}
-
-
-    
-
-        {/* Render the leaderboard table or a fallback message */}
-        {leaderboard.length > 0 ? (
-          <table className="leaderboard-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>School</th>
-                <th>Subject</th>
-                <th>Score</th>
-                <th>Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leaderboard.map((entry, idx) => (
-                <tr key={entry.id}>
-                  <td>{idx + 1}</td>
-                  <td>{entry.user?.username || 'Anonymous'}</td>
-                  <td>{entry.user?.school || 'N/A'}</td>
-                  <td>{entry.subject?.name || 'Unknown'}</td>
-                  <td>{entry.score}</td>
-                  <td title={`${entry.duration} sec`}>
-                    {Math.floor(entry.duration / 60)}m {entry.duration % 60}s
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>No leaderboard data available yet.</p>
+            <button
+              onClick={() => setPage(p => p + 1)}
+              disabled={!hasNextPage}
+            >
+              Next ➡
+            </button>
+          </div>
         )}
+        <div className="divider-labeled">
+  <span>Leaderboard Results</span>
+</div>
       </div>
+
+      {/* Leaderboard table or fallback message */}
+      {leaderboard.length > 0 ? (
+        <table className="leaderboard-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Username</th>
+              <th>School</th>
+              <th>Subject</th>
+              <th>Score</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {leaderboard.map((entry, idx) => (
+              <tr key={entry.id}>
+                <td>{idx + 1}</td>
+                <td>{entry.user?.username || 'Anonymous'}</td>
+                <td>{entry.user?.school || 'N/A'}</td>
+                <td>{entry.subject?.name || 'Unknown'}</td>
+                <td>{entry.score}</td>
+                <td title={`${entry.duration} sec`}>
+                  {Math.floor(entry.duration / 60)}m {entry.duration % 60}s
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No leaderboard data available yet.</p>
+      )}
     </div>
-  );
-};
+  </div>
+);
+
+}
 
 export default Leaderboard;
-
-
-
-
-
-

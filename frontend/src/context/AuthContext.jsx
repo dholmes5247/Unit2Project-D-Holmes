@@ -62,11 +62,14 @@ if (!res.ok) {
 
     // ✅ Preserve full user object including ID
     const transformedUser = {
-      id: backendUser.id,
-      name: backendUser.username ?? backendUser.name,
-      email: backendUser.email,
-      schoolName: backendUser.school ?? backendUser.schoolName,
-    };
+  id: backendUser.id,
+  username: backendUser.username, // ← ADD THIS LINE
+  name: backendUser.name, // or keep as username if you're using it
+  
+  email: backendUser.email,
+  schoolName: backendUser.school ?? backendUser.schoolName,
+};
+
 
     setUser(transformedUser);
     localStorage.setItem('user', JSON.stringify(transformedUser));

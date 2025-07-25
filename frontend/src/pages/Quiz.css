@@ -16,7 +16,7 @@
 .tv-frame {
   background-color: var(--tv-frame-bg);
   border: 14px solid #34217d;
-  height: 500px;   /* fixed TV screen size */
+  height: 600px;   /* fixed TV screen size */
   border-radius: 35px;
   padding: 2.5rem;
   box-shadow: 0 0 30px #221063;
@@ -43,6 +43,67 @@
   transition: all 0.3s ease;
 }
 
+.screen-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.quiz-summary {
+  width: 100%;
+  max-width: 90%;
+  background-color: var(--tv-screen-core);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: inset 0 0 15px var(--tv-screen-glow);
+  color: var(--text-color);
+  text-align: center;
+  line-height: 1.6;
+  font-size: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* adds spacing between paragraphs and sections */
+}
+
+.dashboard-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.dashboard-actions button,
+.button-link {
+  padding: 0.8rem 1.4rem;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  background: #221063;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 8px #34217d;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.dashboard-actions button:hover,
+.button-link:hover {
+  transform: scale(1.05);
+  background: #34217d;
+}
+
+.score-display {
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: inset 0 0 10px #0ff;
+}
 
 :root {
   --tv-screen-bg: rgba(255, 255, 255, 0.7);  /* light mode: translucent white */
@@ -54,7 +115,7 @@ body.dark-mode {
   --tv-screen-glow: #0ff;                   /* bright neon glow */
 }
 .static-screen {
-  min-height: 400px;
+  min-height: 550px;
   display: flex;
   justify-content: center;
   align-items: center;
