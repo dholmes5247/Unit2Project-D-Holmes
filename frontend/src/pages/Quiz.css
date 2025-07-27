@@ -2,8 +2,8 @@
 .quiz-page {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding: 1rem 2rem;
+  gap: .1 rem;
+  padding: .5rem 1rem;
 }
 
 .quiz-wrapper {
@@ -16,7 +16,7 @@
 .tv-frame {
   background-color: var(--tv-frame-bg);
   border: 14px solid #34217d;
-  height: 600px;   /* fixed TV screen size */
+  height: 550px;   /* fixed TV screen size */
   border-radius: 35px;
   padding: 2.5rem;
   box-shadow: 0 0 30px #221063;

@@ -20,7 +20,7 @@ export default function Header() {
     <div className="header-left">
       <div className="app-title">Boolean || Learning</div>
       {isAuthenticated ? (
-        <div className="userName">Hi, {user.name}</div>
+        <div className="userName">Hi, {user.username}</div>
       ) : (
         <div className="sign-in-prompt">
           <Link to="/login">Log In</Link> or{' '}

@@ -8,7 +8,7 @@ import trueFalseImage from '../assets/images/trueFalseImage.jpg'; //
 
 
 export default function Home() {
-  const user = useContext(AuthContext); // Or however you’ve structured it
+  const user = useContext(AuthContext); // authcontext
   return (
     <div>
       <h2>Welcome to Boolean || Learning</h2>
@@ -25,7 +25,7 @@ Please feel free to use any of our materials for your own review.
 We only ask that you sign in using your name, email, and school or study course.
 We don't send junk mail, sell your data or generally make a nuisance of ourselves.
  We use your info to track progress and show leaderboard results. Thanks for using our quiz app!
-If you want to reset the leaderboard and challenge your friends, click the "Reset Leaderboard" button below. 
+If you prefer a lighter or darker mode there is a toggle in the footer you can use!
   </p> 
 
 {/* Clickable image linking to LinkedIn profile */}

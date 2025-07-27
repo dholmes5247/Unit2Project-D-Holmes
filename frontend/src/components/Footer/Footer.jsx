@@ -9,37 +9,40 @@ export default function Footer() {
 
   return (
     <footer className="footer">
-      <div className="footer-content">
-        
-        {/* Left side: Logo and copyright */}
-        <div className="footer-left">
-          <img src={logo} alt="Holmes Farm Logo" className="footer-logo" />
-          <div className="footer-text">
-            &copy; {new Date().getFullYear()} Holmes Farm LLC
-          </div>
-        </div>
+  <div className="footer-content">
+    
+    {/* Left side */}
+    <div className="footer-left">
+      <img src={logo} alt="Holmes Farm Logo" className="footer-logo" />
+      
+    </div>
 
-        {/* Right side: Nav links and contact */}
-        <div className="footer-right">
-          <div className="footer-links">
-            <ul className="nav-links">
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/quiz">Quiz</Link></li>
-              <li><Link to="/leaderboard">Leaderboard</Link></li>
-              <li><Link to="/about">About</Link></li>
-            </ul>
-          </div>
+    {/* Center */}
+    <div className="footer-center">
+      <button className="dark-toggle" onClick={toggleTheme}>
+        {isDark ? '☀ Light Mode' : '🌙 Dark Mode'}
+      </button>
+    </div>
 
-          <div className="footer-text email">
-            Contact us: <a href="mailto:dholmes5247@hotmail.com">dholmes5247@hotmail.com</a>
-          </div>
-
-          <button className="dark-toggle" onClick={toggleTheme}>
-            {isDark ? '☀ Light Mode' : '🌙 Dark Mode'}
-          </button>
-        </div>
+    {/* Right side */}
+    <div className="footer-right">
+      <ul className="nav-links">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/quiz">Quiz</Link></li>
+        <li><Link to="/leaderboard">Leaderboard</Link></li>
+        <li><Link to="/about">About</Link></li>
+      </ul>
+      <div className="footer-text email">
+        Contact us: <a href="mailto:dholmes5247@hotmail.com">dholmes5247@hotmail.com</a>
       </div>
-    </footer>
+      <div className="footer-text">
+        &copy; {new Date().getFullYear()} Holmes Farm LLC
+      </div>
+    </div>
+    
+  </div>
+</footer>
+
   );
 }
 

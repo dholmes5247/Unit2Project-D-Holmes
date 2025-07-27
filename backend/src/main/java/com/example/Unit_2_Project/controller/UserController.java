@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,23 +107,6 @@ public class UserController {
         return ResponseEntity.ok(profile);
     }
 
-
-    // POST /api/users - Create a new user
-    @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) {
-        // Create User entity from UserDTO
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getEmail());
-        user.setName(userDTO.getName());
-        user.setSchool(userDTO.getSchool());
-        user.setPassword(userDTO.getPassword()); // Consider hashing the password before saving
-
-        // Save the user to the database
-        userRepository.save(user);
-        return ResponseEntity.status(201).body(user); // Return the created user
-    }
-
     // POST /api/users/signup – Creates new user and returns success message
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody UserSignupDTO userDto) {
@@ -175,26 +159,25 @@ public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO l
     // ✨ Step 4: Build a full UserProfileDTO to send to frontend
     UserProfileDTO profileDTO = new UserProfileDTO();
     profileDTO.setId(user.getId()); // ✅ This line ensures user.id is available in the frontend
-    profileDTO.setUsername(user.getName());
+    profileDTO.setUsername(user.getUsername()); // Correct field
+    profileDTO.setName(user.getName());
     profileDTO.setEmail(user.getEmail());
     profileDTO.setSchool(user.getSchool()); // if applicable
     profileDTO.setQuizAttempts(List.of());  // optionally populate later
+
+    System.out.println("🧠 Name at login: " + user.getName());
 
     // 🚀 Step 5: Return token + full user profile as response
     Map<String, Object> response = new HashMap<>();
     response.put("token", token);
     response.put("user", profileDTO); // 👈 This replaces the manual Map and ensures full user data
-
+    System.out.println("🧠 Name at login: " + user.getName());
     return ResponseEntity.ok(response);
 }
 
 
-
-
-
-
     // PUT /api/users/{id} - Update an existing user
-    @PutMapping("/id/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         Optional<User> optional = userRepository.findById(id);
         if (optional.isPresent()) {
@@ -215,14 +198,20 @@ public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO l
     }
 
     // DELETE /api/users/{id} - Delete a user
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+        System.out.println("🔥 DELETE request received for user ID: " + id);
+
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
+            System.out.println("✅ Deleted user with ID: " + id);
             return ResponseEntity.noContent().build();
         }
+
+        System.out.println("❌ User ID not found: " + id);
         return ResponseEntity.notFound().build();
     }
+
 }
 
 

@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const isAuthenticated = Boolean(user);
-
+  
   // 🔁 Step 1: Rehydrate user from localStorage on page load
   useEffect(() => {
     const saved = localStorage.getItem('user');
@@ -30,6 +30,7 @@ console.log("🧾 Backend login response:", body);
     }
 
     return true;
+
   };
 
   // 🔐 Step 3: Login — saves full user profile with ID
@@ -52,30 +53,31 @@ if (!res.ok) {
   }
 
   throw new Error(message);
-}
-
-
-
-    
+}    
 
     const { token, user: backendUser } = body;
 
     // ✅ Preserve full user object including ID
     const transformedUser = {
   id: backendUser.id,
-  username: backendUser.username, // ← ADD THIS LINE
-  name: backendUser.name, // or keep as username if you're using it
-  
+  username: backendUser.username,
+  name: backendUser.name || backendUser.username, // fallback if name is missing
   email: backendUser.email,
-  schoolName: backendUser.school ?? backendUser.schoolName,
+  schoolName: backendUser.school,
 };
-
 
     setUser(transformedUser);
     localStorage.setItem('user', JSON.stringify(transformedUser));
     localStorage.setItem('token', token);
+
+    
+
+
+    return transformedUser;
   };
+
 console.log("🎯 Logged-in user:", user);
+
 
   // 🚪 Step 4: Logout
   const logout = () => {

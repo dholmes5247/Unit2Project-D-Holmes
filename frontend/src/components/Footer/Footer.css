@@ -12,6 +12,23 @@
 }
 
 .footer-content {
+  display: flex;
+  justify-content: space-between; /* spacing for left, center, right */
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-left,
+.footer-center,
+.footer-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.footer-content {
   /* Flex layout for footer sections */
   display: flex;
   justify-content: space-between;

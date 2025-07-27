@@ -1,110 +1,89 @@
-
-
-
+/* ───────────── HOME PAGE STRUCTURE ───────────── */
 
 .home-page {
   display: flex;
-  flex-wrap: wrap; /* Allows columns to wrap on smaller screens */
-  justify-content: space-between;  
+  flex-direction: row;
+
   margin: 0 auto;
-  max-width: 1200px;  
-  padding: .5rem;
+  max-width: 1200px;
+  padding: 1rem;
   box-sizing: border-box;
 }
 
+/* ───────────── LEFT SIDE: Welcome, Text, Image ───────────── */
 
-
-
-/* Home Left: Heading & Text */
 .home-left {
   display: flex;
   flex-direction: column;
-  align-items: flex;
-  max-width: 360px;
-  padding-left: 25px;
-  text-align: center;
-  gap: 1rem;
-  
+  gap: 1.25rem;
+  max-width: 500px;
+  padding-left: 20px;
+  text-align: left;
 }
 
+/* Welcome Heading */
 .home-left h2 {
-  font-size: 1.5rem;
-  line-height: 1.25;
-  text-align: center;
+  font-size: 1.6rem;
+  line-height: 1.3;
+  color: var(--text-color);
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.45);
-
+  margin-bottom: 0.5rem;
 }
 
+/* Descriptive Paragraph */
 .home-left p {
   font-size: 1rem;
-  text-align: center;
+  line-height: 1.6;
+  color: var(--text-color);
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.45);
-
 }
 
-/* true-false image */
+/* Animated Image (True/False) */
 .home-image {
-  
-      animation: pulse 3s infinite;
-    transition: transform 0.3s ease;
   width: 95%;
-  border-radius: 12px;    
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-  
-}
-
-/* Home Right- Leaderboard */
-.home-right {
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  
-  padding-right: 25px;
-}
-
-/* Leaderboard Table */
-.leaderboard {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  background-color: transparent;
-  text-align: left;
-}
-
-.leaderboard-body {
-  min-width: 600px;
-    width: 100%;
-  border-collapse: collapse;
-}
-
-.leaderboard th,
-.leaderboard td {
-  padding: 12px 15px;
-  text-align: left;
-  font-size: 1rem;
-  border-bottom: 1px solid #ddd;
-  min-width: 130px;
-}
-
-/* Reset Button */
-.reset-button {
-  margin-top: 1.25rem;
-  background-color: rgb(206, 41, 41);
-  color: white;
-  border: none;
   border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  animation: pulse 3s infinite;
+  transition: transform 0.3s ease;
 }
 
-.reset-button:hover {
-  background-color: #f51a07;
-  transform: scale(1.2);
+/* ───────────── RIGHT SIDE: Placeholder ───────────── */
+
+.home-right {
+  flex: 1;
+  max-width: 600px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Placeholder box for future content */
+.placeholder-box {
+  width: 100%;
+  min-height: 100px;
+  border: 2px dashed #888;
+  border-radius: 8px;
+  padding: 1rem;
+  color: #888;
+  font-style: italic;
+  text-align: center;
+}
 
-@media (max-width: 500px) {
+/* ───────────── ANIMATIONS ───────────── */
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* ───────────── RESPONSIVE ───────────── */
+
+@media (max-width: 750px) {
   .home-page {
     flex-direction: column;
     align-items: center;
@@ -112,25 +91,18 @@
 
   .home-left,
   .home-right {
-    max-width: 100%;
     width: 100%;
+    max-width: none;
+    padding: 0;
+    text-align: center;
   }
 
-  .leaderboard {
-    max-width: 100%;
-    
+  .home-left h2,
+  .home-left p {
+    text-align: center;
   }
 
-    .leaderboard th,
-  .leaderboard td {
-    font-size: 0.9rem;
-    padding: 8px;
+  .placeholder-box {
+    margin-top: 1rem;
   }
 }
-
-  .leaderboard-container {
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-
