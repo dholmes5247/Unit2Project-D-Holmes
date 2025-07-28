@@ -13,6 +13,6 @@ public class LoginStatsDTO {
         this.lastActiveDate = lastActiveDate;
         this.loginStreak = loginStreak;
     }
-// constructors, getters, setters
+// using lombok, getters, setters
 }
 

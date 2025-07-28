@@ -13,20 +13,20 @@
 .full-home-page {
   display: flex;
   justify-content: space-between;
-  padding: 2rem;
 }
 
-.full-home-page > div {
+.left-panel {
   flex: 1;
-  margin: 1rem;
+  margin-right: 2rem;
 }
 
 .right-panel {
-  background: var(--panel-bg, #f4f4f4);
+  flex: 1;
+  background-color: #f8f8f8;
   padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
+
 
 
 /* ───────────── LEFT SIDE: Welcome, Text, Image ───────────── */

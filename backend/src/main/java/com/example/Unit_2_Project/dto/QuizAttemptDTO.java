@@ -1,6 +1,8 @@
 package com.example.Unit_2_Project.dto;
 
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -12,7 +14,11 @@ public class QuizAttemptDTO {
     private Long timeTakenInSeconds;
     private LocalDateTime startedAt;
     private LocalDateTime completedAt;
+
+    @Min(1)
+    @NotNull
     private Integer totalQuestions; // total number of questions in the quiz
+
     // Directly reflect duration in seconds
     private Long duration;
     private UserDTO user; // include full user info

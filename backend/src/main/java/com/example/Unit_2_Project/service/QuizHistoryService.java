@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 public class QuizHistoryService {
@@ -29,9 +31,16 @@ public class QuizHistoryService {
 
     // Retrieves how many quizzes the user completed starting Monday of this week
     public int countQuizzesThisWeek(int userId) {
-        LocalDate startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY);
-        return quizAttemptRepository.countQuizzesThisWeek(userId, startOfWeek);
+        LocalDate today = LocalDate.now();
+        LocalDate weekStart = today.with(DayOfWeek.MONDAY);
+        LocalDate weekEnd = today.with(DayOfWeek.SUNDAY);
+
+        LocalDateTime start = weekStart.atStartOfDay();
+        LocalDateTime end = weekEnd.atTime(LocalTime.MAX); // End of day
+
+        return quizAttemptRepository.countByUserIdAndStartedAtBetween(userId, start, end);
     }
+
 
     // Returns how many unique quiz categories the user has explored
     public int countCategoriesExplored(int userId) {

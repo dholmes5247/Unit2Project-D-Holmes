@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -27,8 +31,13 @@ public class QuizAttempt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Min(0)
     private int score;
+
+    @CreatedDate
     private LocalDateTime startedAt;
+
+    @LastModifiedDate
     private LocalDateTime completedAt;
 
     @Column(nullable = true)
@@ -41,6 +50,7 @@ public class QuizAttempt {
         }
         return 0;
     }
+    @Min(1)
     @Column(name = "total_questions", nullable = false)
     private Integer totalQuestions;
 

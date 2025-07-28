@@ -19,7 +19,7 @@ export default function Home() {
       try {
         const res = await fetch(`http://localhost:8080/api/stats/${user.id}`);
         const data = await res.json();
-        setLoginStats(data);
+        setLoginStats(data); // sets the state
       } catch (err) {
         console.error('Error fetching login stats:', err);
       }
@@ -64,16 +64,15 @@ export default function Home() {
         {/*  conditionally render stats here later */}
         {/* {loginStats && <StatsDisplay stats={loginStats} />} */}
         {user && loginStats && (
-        <div className="right-panel">
-          <h3>Your Weekly Highlights</h3>
-
-        <ul>
-            <li><strong>Last Active:</strong> {loginStats.lastActiveDate}</li>
-            <li><strong>Login Streak:</strong> {loginStats.loginStreak} days</li>
-            {/* Add more user stats as I expand */}
-        </ul>
+  <div className="right-panel">
+    <h3>Your Weekly Highlights</h3>
+    <ul>
+      <li><strong>Last Active:</strong> {loginStats.lastActiveDate}</li>
+      <li><strong>Login Streak:</strong> {loginStats.loginStreak} days</li>
+    </ul>
   </div>
 )}
+
 
       </div>
     </div>

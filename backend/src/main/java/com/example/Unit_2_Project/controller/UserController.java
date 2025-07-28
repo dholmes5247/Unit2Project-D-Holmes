@@ -1,7 +1,9 @@
 package com.example.Unit_2_Project.controller;
 
 import com.example.Unit_2_Project.dto.*;
+import com.example.Unit_2_Project.model.LoginEvent;
 import com.example.Unit_2_Project.model.User;
+import com.example.Unit_2_Project.repository.LoginEventRepository;
 import com.example.Unit_2_Project.repository.QuizAttemptRepository;
 import com.example.Unit_2_Project.repository.SubjectRepository;
 import com.example.Unit_2_Project.repository.UserRepository;
@@ -15,6 +17,8 @@ import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +43,9 @@ public class UserController {
 
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private LoginEventRepository loginEventRepository; // Repository for login events
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -156,9 +163,17 @@ public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO l
     // 🧠 Step 3: Generate JWT
     String token = jwtUtil.generateToken(user.getEmail());
 
+    // 📅 Save Login Event
+    LoginEvent event = new LoginEvent();
+    event.setUser(user); // Associate the login event with the user object
+    event.setLoginDate(LocalDate.now());
+    event.setTimestamp(LocalDateTime.now()); // Use LocalDateTime for precise timestamp
+    loginEventRepository.save(event); //  lowercase — the injected bean
+
+
     // ✨ Step 4: Build a full UserProfileDTO to send to frontend
     UserProfileDTO profileDTO = new UserProfileDTO();
-    profileDTO.setId(user.getId()); // ✅ This line ensures user.id is available in the frontend
+    profileDTO.setId(user.getId()); //  This line ensures user.id is available in the frontend
     profileDTO.setUsername(user.getUsername()); // Correct field
     profileDTO.setName(user.getName());
     profileDTO.setEmail(user.getEmail());
