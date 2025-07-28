@@ -9,6 +9,22 @@ body.dark-mode {
   --text-color: #f0f0f0;
 }
 
+/* index.css or App.css — global styles */
+:root {
+  --panel-bg: #ffffff;
+  --text-primary: #222222;
+  --accent: #f5480e;
+  /* Add more theme vars here */
+}
+
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #f0f0f0;
+  --panel-bg: #1e1e1e;
+  --text-primary: #f0f0f0;
+}
+
+
 /* ─────────── GLOBAL RESET & FONT ─────────── */
 * {
   box-sizing: border-box;
