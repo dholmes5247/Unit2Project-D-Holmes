@@ -28,7 +28,7 @@ export default function LoginForm() {
     e.preventDefault();
     try {
       await login(form);
-      nav('/quiz');
+      nav('/home');
     } catch (error) {
       const message =
         error?.message?.includes('401') || error?.message?.includes('Unauthorized')
