@@ -178,24 +178,32 @@ public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO l
 
     // PUT /api/users/{id} - Update an existing user
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
-        Optional<User> optional = userRepository.findById(id);
-        if (optional.isPresent()) {
-            User existingUser = optional.get();
-            existingUser.setUsername(userDTO.getUsername());
-            existingUser.setEmail(userDTO.getEmail());
-            existingUser.setName(userDTO.getName());
-            existingUser.setSchool(userDTO.getSchool());
-            existingUser.setPassword(userDTO.getPassword()); // Consider hashing the password before saving
+    public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody UserUpdateDTO dto) {
+        Optional<User> optionalUser = userRepository.findById(id);
 
-            userRepository.save(existingUser);
-            return ResponseEntity.ok(existingUser);
-        } else {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "User with ID " + id + " was not found.");
-            return ResponseEntity.status(404).body(error);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+
+        User user = optionalUser.get();
+        user.setUsername(dto.getUsername());
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setSchool(dto.getSchool());
+
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        try {
+            userRepository.save(user);
+            return ResponseEntity.ok("User updated successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
         }
     }
+
 
     // DELETE /api/users/{id} - Delete a user
     @DeleteMapping("/{id}")
