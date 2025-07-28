@@ -10,6 +10,25 @@
   box-sizing: border-box;
 }
 
+.full-home-page {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.full-home-page > div {
+  flex: 1;
+  margin: 1rem;
+}
+
+.right-panel {
+  background: var(--panel-bg, #f4f4f4);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+
 /* ───────────── LEFT SIDE: Welcome, Text, Image ───────────── */
 
 .home-left {
