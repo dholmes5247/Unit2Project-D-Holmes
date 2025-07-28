@@ -1,7 +1,75 @@
-.login-error {
-  animation: shake 0.3s ease;
-  margin-top: 1rem;
+.login-form-container {
+  background: radial-gradient(circle at top left, #222 0%, #111 100%);
+  border: 2px solid #f7d433;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(247, 212, 51, 0.5);
+  max-width: 480px;
+  margin: 2rem auto;
+  color: #eee;
 }
+
+.login-form-container input {
+  background-color: #1c1c1c;
+  color: #f7d433;
+  border: 1px solid #f7d433;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  width: 100%;
+  font-family: 'Orbitron', sans-serif; /* futuristic vibe */
+}
+
+.login-form-container label {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #ffe773;
+}
+
+.login-form-container button[type="submit"] {
+  background-color: #f7d433;
+  border: none;
+  color: #111;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.login-form-container button[type="submit"]:hover {
+  transform: scale(1.05);
+  background-color: #ffe773;
+}
+
+.update-button {
+  background: none;
+  border: 1px solid #f7d433;
+  color: #f7d433;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.update-button:hover {
+  background-color: #f7d433;
+  color: #111;
+}
+
+
+.login-error {
+  background-color: #441111;
+  border: 1px solid #ff5555;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #fff;
+  animation: shake 0.3s ease;
+}
+
 
 @keyframes shake {
   0% { transform: translateX(0); }

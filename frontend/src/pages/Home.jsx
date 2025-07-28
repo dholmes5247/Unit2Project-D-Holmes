@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+// import { useContext } from 'react'; moving to login
 import { AuthContext } from '../context/AuthContext';
 import EditProfileForm from '../components/EditProfileForm/EditProfileForm';
 import trueFalseImage from '../assets/images/trueFalseImage.jpg'; // 
-
+import './home.css';
 
 
 export default function Home() {
-  const user = useContext(AuthContext); // authcontext
+  // const user = useContext(AuthContext); // authcontext moving update user to login
   return (
     <div>
       <h2>Welcome to Boolean || Learning</h2>
@@ -40,7 +40,7 @@ If you prefer a lighter or darker mode there is a toggle in the footer you can u
       </a>
 
 
-      <EditProfileForm userId={user.id} />
+      
       {/* Other homepage content */}
     </div>
     </div>

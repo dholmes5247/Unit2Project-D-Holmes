@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth'; // Custom auth hook
+import './SignUpForm.css';
 
 export default function SignUpForm() {
   // Initialize form state with empty strings (avoids uncontrolled input warnings)
@@ -33,12 +34,12 @@ export default function SignUpForm() {
     }
   };
 
-  return (
+return (
+  <div className="signup-form-container">
     <form onSubmit={handleSubmit}>
       <h2>Sign Up</h2>
 
-      {/* Display error if present */}
-      {err && <p style={{ color: 'red' }}>{err}</p>}
+      {err && <p className="error">{err}</p>}
 
       <label>
         Name:
@@ -49,7 +50,6 @@ export default function SignUpForm() {
           required
         />
       </label>
-      <br />
 
       <label>
         Email:
@@ -61,7 +61,6 @@ export default function SignUpForm() {
           required
         />
       </label>
-      <br />
 
       <label>
         Username:
@@ -72,7 +71,6 @@ export default function SignUpForm() {
           required
         />
       </label>
-      <br />
 
       <label>
         Password:
@@ -84,7 +82,6 @@ export default function SignUpForm() {
           required
         />
       </label>
-      <br />
 
       <label>
         School:
@@ -95,92 +92,9 @@ export default function SignUpForm() {
           required
         />
       </label>
-      <br />
 
       <button type="submit">Sign Up</button>
     </form>
-  );
+  </div>
+);
 }
-
-
-
-/*import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '/hooks/useAuth';
-
-export default function SignUpForm() {
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    schoolName: '',
-    password: ''
-  });
-  const [error, setError] = useState('');
-  const { signup } = useAuth();
-  const navigate = useNavigate();
-
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      await signup(form);
-      navigate('/login');
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>Sign Up</h2>
-      {error && <p className="error">{error}</p>}
-      <label>
-        Name:
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <label>
-        Email:
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <label>
-        School:
-        <input
-          name="schoolName"
-          value={form.schoolName}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <label>
-        Password:
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <button type="submit">Sign Up</button>
-    </form>
-  );
-}
-*/

@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { AuthContext } from '../../context/AuthContext'; // Make sure this path matches your setup
 import EditProfileForm from '../EditProfileForm/EditProfileForm'; // Adjust path if needed
+import './LoginForm.css';
+
+
+
 
 export default function LoginForm() {
   const [form, setForm] = useState({ email: '', password: '' });

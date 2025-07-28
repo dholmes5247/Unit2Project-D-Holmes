@@ -68,9 +68,7 @@ if (!res.ok) {
 
     setUser(transformedUser);
     localStorage.setItem('user', JSON.stringify(transformedUser));
-    localStorage.setItem('token', token);
-
-    
+    localStorage.setItem('token', token);  
 
 
     return transformedUser;
