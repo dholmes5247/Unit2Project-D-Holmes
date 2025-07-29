@@ -51,9 +51,29 @@ const handleUpdateClick = async () => {
 
 return (
   <div className="form-wrapper">
+  
+  <div className="choose-path-panel">
+    <h2 classname="choose-header">Choose Your Path</h2>
+    <p classname="choose-subtext">Welcome to the control room. You have options:</p>
+    <ul>
+  <li>
+    <strong>Log In:</strong><br />
+    <span>Start your session and access your dashboard</span>
+  </li>
+  <li>
+    <strong>Update Info:</strong><br />
+    <span>Edit your email and password if needed</span>
+  </li>
+  <li>
+    <strong>Sign Up:</strong><br />
+    <span>Create an account to begin your journey</span>
+  </li>
+</ul>
+
+  </div>
   <div className="login-form-container">
     <form onSubmit={submit}>
-      <h2>Log In</h2>
+      <h2>Welcome</h2>
 
       {err && (
         <div className="login-error">
@@ -93,7 +113,7 @@ return (
         onClick={handleUpdateClick}
         className="update-button"
       >
-        ✏️ Update Info Instead
+        ✏️ *Update Info Instead--Click after email and password*
       </button>
 
       <p>

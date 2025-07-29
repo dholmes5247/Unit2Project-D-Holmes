@@ -77,13 +77,14 @@ return (
             {/* ✅ Subject Selection OR Quiz Content */}
             {!selectedSubject ? (
               <div className="tv-static-wrapper">
-                <video autoPlay loop muted className="tv-static-video">
-                  <source src="/static-loop.mp4" type="video/mp4" />
-                </video>
+              <div className="static-background" />
 
-                <div className="subject-overlay">
-                  <label htmlFor="subject">📡 Choose Your Channel:</label>
+              <div className="subject-overlay">
+                <div className="channel-select-panel">
+                  <label htmlFor="subject" className="channel-label">📡 Choose Your Channel:</label>
                   <select
+                    id="subject"
+                    className="channel-dropdown"
                     value={selectedSubject}
                     onChange={(e) => setSelectedSubject(e.target.value)}
                   >
@@ -94,8 +95,11 @@ return (
                       </option>
                     ))}
                   </select>
+                  <p className="channel-helper-text">Please select a subject to begin the quiz.</p>
                 </div>
               </div>
+</div>
+
             ) : (
               <>
                 
@@ -109,7 +113,7 @@ return (
 
             {/* ✅ Prompt if subject not chosen yet */}
             {!selectedSubject && (
-              <p>Please select a subject to begin the quiz.</p>
+              <p>TUNE IN the subject selector! Good Luck & Enjoy!</p>
             )}
 
             {/* ✅ Questions while quiz is active */}

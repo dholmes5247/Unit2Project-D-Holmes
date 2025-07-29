@@ -13,14 +13,24 @@ export default function Footer() {
     
     {/* Left side */}
     <div className="footer-left">
-      <img src={logo} alt="Holmes Farm Logo" className="footer-logo" />
+    <a
+            href="https://en.wikipedia.org/wiki/Rube_Goldberg"
+            className="link"
+            title="Want the easy way?"
+            target="_blank"
+            rel="noreferrer"
+            alt="Rube_Goldberg image"
+          >
+            <img src={logo} className="footer-logo" />
+          </a>
+      
       
     </div>
 
     {/* Center */}
     <div className="footer-center">
       <button className="dark-toggle" onClick={toggleTheme}>
-        {isDark ? '☀ Light Mode' : '🌙 Dark Mode'}
+        {isDark ? '💡 Light Mode' : '🌙 Dark Mode'}
       </button>
     </div>
 
