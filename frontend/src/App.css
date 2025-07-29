@@ -51,7 +51,7 @@ html, body {
 .main-content {
   flex: 1;
   padding: 10px;
-  padding-bottom: 100;
+  
   overflow-x: hidden;
 }
 

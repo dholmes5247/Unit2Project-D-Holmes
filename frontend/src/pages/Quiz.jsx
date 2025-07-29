@@ -68,14 +68,13 @@ return (
     <h2 className="quiz-header">Boolean || Learning!</h2>
     <div className="quiz-wrapper">
       <div className="tv-frame">
-
         {isLoading ? (
           <div className="static-screen">
             <p className="flicker-text">📡 Tuning in...</p>
           </div>
         ) : (
           <>
-            {/* ✅ Subject Selection or Subject Display */}
+            {/* ✅ Subject Selection OR Quiz Content */}
             {!selectedSubject ? (
               <div className="tv-static-wrapper">
                 <video autoPlay loop muted className="tv-static-video">
@@ -89,7 +88,7 @@ return (
                     onChange={(e) => setSelectedSubject(e.target.value)}
                   >
                     <option value="">-- Select a Subject --</option>
-                    {subjectList.map(subject => (
+                    {subjectList.map((subject) => (
                       <option key={subject.id} value={subject.id}>
                         {subject.name}
                       </option>
@@ -98,38 +97,44 @@ return (
                 </div>
               </div>
             ) : (
-              <p className="selected-subject">
-                Subject: <b>{quizSummary?.subject?.name || currentSubjectName}</b>
-              </p>
+              <>
+                
+
+                {/* ✅ Subject Info */}
+                <p className="selected-subject">
+                  Subject: <b>{quizSummary?.subject?.name || currentSubjectName}</b>
+                </p>
+              </>
             )}
 
-            {/* ✅ Message before quiz starts */}
-            {!selectedSubject && <p>Please select a subject to begin the quiz.</p>}
+            {/* ✅ Prompt if subject not chosen yet */}
+            {!selectedSubject && (
+              <p>Please select a subject to begin the quiz.</p>
+            )}
 
-
+            {/* ✅ Questions while quiz is active */}
             {selectedSubject && !quizFinished && (
-  <QuestionList
-    score={score}
-    setScore={setScore}
-    setQuizFinished={setQuizFinished}
-    selectedSubject={selectedSubject}
-    user={user}
-    showSummary={(attemptObj) => {
-      if (!attemptObj) {
-        setScore(0);
-        setQuizSummary(null);
-        setQuizFinished(true);
-        return;
-      }
-      setScore(attemptObj.score || attemptObj.correct || 0);
-      setQuizSummary(attemptObj);
-      setQuizFinished(true);
-    }}
-  />
-)}
+              <QuestionList
+                score={score}
+                setScore={setScore}
+                setQuizFinished={setQuizFinished}
+                selectedSubject={selectedSubject}
+                user={user}
+                showSummary={(attemptObj) => {
+                  if (!attemptObj) {
+                    setScore(0);
+                    setQuizSummary(null);
+                    setQuizFinished(true);
+                    return;
+                  }
+                  setScore(attemptObj.score || attemptObj.correct || 0);
+                  setQuizSummary(attemptObj);
+                  setQuizFinished(true);
+                }}
+              />
+            )}
 
-
-            {/* ✅ Quiz Summary */}
+            {/* ✅ Quiz Summary after completion */}
             {selectedSubject && quizFinished && quizSummary && (
               quizSummary.exitedEarly ? (
                 <div className="quiz-summary">
@@ -137,49 +142,79 @@ return (
                   <p>No attempt was saved.</p>
                   <div className="dashboard-actions">
                     <button onClick={handleRetakeQuiz}>🔄 Start Over</button>
-                    <button onClick={handleChooseSubject}>📚 Choose Another Subject</button>
+                    <button onClick={handleChooseSubject}>
+                      📚 Choose Another Subject
+                    </button>
                   </div>
                 </div>
               ) : (
                 <div className="screen-content">
                   <div className="quiz-summary">
-                    <h2>Great work, {user?.userName || user?.name || "Learner"}!</h2>
+                    <h2>
+                      Great work, {user?.userName || user?.name || "Learner"}!
+                    </h2>
 
                     <div className="score-display">
                       <p>
-                        Subject: <b>{quizSummary.subject?.name || currentSubjectName}</b><br />
-                        Score: <b>{quizSummary.score}</b> / <b>{quizSummary.totalQuestions || "?"}</b>
-                        (<b>
-                          {quizSummary.totalQuestions && quizSummary.totalQuestions > 0
-                            ? `${Math.round((quizSummary.score / quizSummary.totalQuestions) * 100)}%`
+                        Subject:{" "}
+                        <b>{quizSummary.subject?.name || currentSubjectName}</b>
+                        <br />
+                        Score: <b>{quizSummary.score}</b> /{" "}
+                        <b>{quizSummary.totalQuestions || "?"}</b> (
+                        <b>
+                          {quizSummary.totalQuestions &&
+                          quizSummary.totalQuestions > 0
+                            ? `${Math.round(
+                                (quizSummary.score /
+                                  quizSummary.totalQuestions) *
+                                  100
+                              )}%`
                             : "N/A%"}
-                        </b>)<br />
+                        </b>
+                        )<br />
                         Duration: <b>{quizSummary.duration || 0}</b> seconds
                       </p>
                       <p>
-                        Started: <b>{quizSummary.startedAt ? new Date(quizSummary.startedAt).toLocaleString() : "N/A"}</b><br />
-                        Completed: <b>{quizSummary.completedAt ? new Date(quizSummary.completedAt).toLocaleString() : "N/A"}</b>
+                        Started:{" "}
+                        <b>
+                          {quizSummary.startedAt
+                            ? new Date(
+                                quizSummary.startedAt
+                              ).toLocaleString()
+                            : "N/A"}
+                        </b>
+                        <br />
+                        Completed:{" "}
+                        <b>
+                          {quizSummary.completedAt
+                            ? new Date(
+                                quizSummary.completedAt
+                              ).toLocaleString()
+                            : "N/A"}
+                        </b>
                       </p>
                     </div>
                   </div>
 
                   <div className="dashboard-actions">
                     <button onClick={handleRetakeQuiz}>🔄 Retake Quiz</button>
-                    <button onClick={handleChooseSubject}>📚 Another Subject?</button>
-                    <a href="/leaderboard" className="button-link">🏆 View Leaderboard 🏆</a>
+                    <button onClick={handleChooseSubject}>
+                      📚 Another Subject?
+                    </button>
+                    <a href="/leaderboard" className="button-link">
+                      🏆 View Leaderboard 🏆
+                    </a>
                   </div>
                 </div>
               )
             )}
-
           </>
-
         )}
-
       </div>
     </div>
   </section>
 );
+
 
 }
 
