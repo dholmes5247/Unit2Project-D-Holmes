@@ -1,11 +1,21 @@
+.form-wrapper {
+  min-height: calc(100vh - 200px); /* adjust for footer height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+
 .login-form-container {
   background: radial-gradient(circle at top left, #222 0%, #111 100%);
   border: 2px solid #f7d433;
-  padding: 2rem;
+  padding: 1.25rem;
+  padding-bottom: 6rem;
   border-radius: 8px;
   box-shadow: 0 0 12px rgba(247, 212, 51, 0.5);
   max-width: 480px;
-  margin: 2rem auto;
+  margin: .25rem auto;
   color: #eee;
 }
 
@@ -13,7 +23,7 @@
   background-color: #1c1c1c;
   color: #f7d433;
   border: 1px solid #f7d433;
-  padding: 0.5rem;
+  padding: 0.25rem;
   margin-top: 0.25rem;
   margin-bottom: 1rem;
   border-radius: 4px;

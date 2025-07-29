@@ -50,6 +50,7 @@ const handleUpdateClick = async () => {
 };
 
 return (
+  <div className="form-wrapper">
   <div className="login-form-container">
     <form onSubmit={submit}>
       <h2>Log In</h2>
@@ -114,6 +115,7 @@ return (
         <EditProfileForm user={editingUser} />
       </>
     )}
+  </div>
   </div>
 );
 }
