@@ -21,7 +21,7 @@ export default function Footer() {
             rel="noreferrer"
             alt="Rube_Goldberg image"
           >
-            <img src={logo} className="footer-logo" />
+            <img src={logo} alt="Holmes Farm Logo" className="footer-logo" />
           </a>
       
       

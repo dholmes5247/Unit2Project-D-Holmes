@@ -2,15 +2,14 @@ package com.example.Unit_2_Project.controller;
 
 import com.example.Unit_2_Project.dto.GeminiRequestDTO;
 import com.example.Unit_2_Project.service.GeminiService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
+@RestControllerAdvice
 @RequestMapping("/api")
 
 public class GeminiController {
@@ -21,10 +20,11 @@ public class GeminiController {
     }
 
     @PostMapping("/explain")
-    public ResponseEntity<String> explainQuestion(@RequestBody GeminiRequestDTO requestDTO) {
+    public ResponseEntity<String> explainQuestion(@Valid @RequestBody GeminiRequestDTO requestDTO) {
         String explanation = geminiService.explainQuestion(requestDTO.getQuestion(), requestDTO.getContext());
         return ResponseEntity.ok(explanation);
     }
+
 
 
 }

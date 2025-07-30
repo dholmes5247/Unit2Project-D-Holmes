@@ -7,11 +7,11 @@ import './Home.css';
 export default function Home() {
   const { user } = useContext(AuthContext);
 
-  // 💾 Local state
+  //  Local state
   const [loginStats, setLoginStats] = useState(null);
   const [userStats, setUserStats] = useState(null);
 
-  // ⚙️ Fetch both login stats and user stats on mount
+  //  Fetch both login stats and user stats on mount
   useEffect(() => {
     if (!user?.id) return;
 
@@ -41,7 +41,7 @@ export default function Home() {
     fetchUserStats();
   }, [user?.id]);
 
-  // 🎨 Page layout and rendering
+  //  Page layout and rendering
   return (
   <div className="full-home-page">
     {/* LEFT SIDE: Intro, Info, Image */}

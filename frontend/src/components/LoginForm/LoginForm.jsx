@@ -53,8 +53,8 @@ return (
   <div className="form-wrapper">
   
   <div className="choose-path-panel">
-    <h2 classname="choose-header">Choose Your Path</h2>
-    <p classname="choose-subtext">Welcome to the control room. You have options:</p>
+    <h2 className="choose-header">Choose Your Path</h2>
+    <p className="choose-subtext">Welcome to the control room. You have options:</p>
     <ul>
   <li>
     <strong>Log In:</strong><br />
