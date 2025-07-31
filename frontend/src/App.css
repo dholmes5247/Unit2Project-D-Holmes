@@ -97,8 +97,6 @@ header, footer {
 }
 
 /* ─────────── VISUAL DEBUGGING (Optional) ─────────── */
-header, .content-area, footer {
-  border: 1px dashed red; /* Remove or tweak later */
-}
+
 
 

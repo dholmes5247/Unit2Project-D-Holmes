@@ -8,7 +8,10 @@
   background-color: #221063;
   color: white;
   padding: 1rem;
-
+  box-shadow: 0 0 12px #00ffff, 0 0 24px rgba(0, 255, 255, 0.3);
+  border-top: 2px solid #00ffff;
+  border-bottom: 2px solid #00ffff;
+  text-shadow: 0 0 2px #00ffff;
 }
 
 .footer-content {
@@ -27,17 +30,6 @@
   justify-content: center;
 }
 
-
-.footer-content {
-  /* Flex layout for footer sections */
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.footer-left {
-  flex: 1;
-}
 
 .footer-logo {
   /* Bouncing logo with shadow */
@@ -61,27 +53,13 @@
   gap: 1rem;
 }
 
-.nav-links {
-  /* Reused header styles for footer links */
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-  padding: 0;
-  margin: 0;
-}
 
-.nav-links a {
-  color: white;
-  text-decoration: none;
-}
 
-.nav-links a:hover {
-  text-decoration: underline;
-}
+
 
 .footer-text {
   font-size: 0.9rem;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  text-shadow: 3px 3px 6px rgba(0, 12, 0, 0.5);
 }
 
 .email a {

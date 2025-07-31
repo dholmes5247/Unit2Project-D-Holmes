@@ -9,6 +9,7 @@ import About           from './pages/About';
 import LoginForm       from './components/LoginForm/LoginForm';
 import SignUpForm      from './components/SignUpForm/SignUpForm';
 import Leaderboard     from './components/Leaderboard/Leaderboard';
+import Rabbit          from './components/Rabbit/Rabbit';
 import './App.css';
 
 
@@ -39,6 +40,8 @@ export default function App() {
           <Route path="/leaderboard" element={<Leaderboard />} />
           
         </Routes>
+        <Rabbit /> 
+        
       </main>
       </div>
       </div>

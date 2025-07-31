@@ -1,11 +1,65 @@
 /* ───────────── HEADER STYLES ───────────── */
 
-.site-header {
-  /* Adds subtle shadow behind header text */
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
-  width: 100%;
-  background-color: #221063; /* fallback for navbar background */
+.site-header,
+.footer {
+  background: linear-gradient(to right, #10052a, #1b0c44);
+  color: white;
+  text-shadow: 0 0 4px #00ffff;
+  box-shadow: 0 0 10px #00ffff, 0 0 24px rgba(0, 255, 255, 0.2);
+  animation: glowPulse 2s infinite;
+  border-radius: 5px;
 }
+
+.site-header {
+  /* Existing styles already here */
+  background: linear-gradient(to right, #10052a, #1b0c44);
+  color: white;
+  text-shadow: 0 0 4px #00ffff;
+  filter: drop-shadow(0 0 6px #00ffff);
+
+  animation: glowPulse 2s infinite;
+
+  /* 👇 Jagged bottom edge */
+  clip-path: polygon(
+    0% 0%, 
+    100% 0%, 
+    100% 85%, 
+    95% 100%, 
+    90% 85%, 
+    85% 100%, 
+    80% 85%, 
+    75% 100%, 
+    0% 85%
+  );
+}
+
+.header-container {
+  position: relative;
+}
+
+.header-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0; /* 👇 ensures it's behind */
+}
+
+.site-header {
+  position: relative;
+  z-index: 1; /* 👆 brings actual content above */
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 6px #00ffff; }
+  50% { box-shadow: 0 0 20px #00ffff; }
+  100% { box-shadow: 0 0 6px #00ffff; }
+}
+
+
+
 
 .navbar {
   display: flex;
@@ -29,6 +83,7 @@
   text-decoration: underline;
   font-weight: bold;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25);
+  animation: hueFlicker 4s infinite;
 }
 
 .userName {
@@ -44,10 +99,10 @@
 }
 
 .sign-in-prompt a {
-  color: #f7d433; /* bright yellow to match username */
+  color: #ffffff; /* bright yellow to match username */
   font-weight: bold;
-  text-decoration: none;
-  animation: pulse 2s infinite;
+  text-decoration: underline;
+  
 }
 
 .sign-in-prompt a:hover {
@@ -63,16 +118,20 @@
   gap: 1rem;
   padding: 0;
   margin: 0;
+  
 }
 
 .nav-links a {
   color: #ffffff;
   text-decoration: none;
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+  transition: text-shadow 0.3s ease;
 }
 
 .nav-links a:hover {
-  /* Underline on hover for nav links */
   text-decoration: underline;
+  color: #00ffff;
+  text-shadow: 0 0 8px #163d3d;
 }
 
 .logout-button {

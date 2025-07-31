@@ -13,7 +13,27 @@ export default function Header() {
   };
 
   return (
+
+    
+    <div class="header-container">
+    <svg class="header-shape" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00ffff" flood-opacity="1"/>
+    </filter>
+    <clipPath id="jagged-clip" clipPathUnits="objectBoundingBox">
+      <polygon points="0 0, 1 0, 1 0.85, 0.95 1, 0.9 0.85, 0.85 1, 0.8 0.85, 0.75 1, 0 0.85"/>
+    </clipPath>
+  </defs>
+  <rect width="100%" height="100%" 
+      fill="#10052a" 
+      clip-path="url(#jagged-clip)" 
+      filter="url(#glow)" />
+
+</svg>
+
     <header className="site-header">
+    
   <div className="navbar">
     
     {/* LEFT: Welcome or Sign-in prompt */}
@@ -44,6 +64,7 @@ export default function Header() {
 
   </div>
 </header>
+</div>
 
 
   );
