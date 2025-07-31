@@ -21,6 +21,13 @@ An immersive quiz experience with a broadcast-inspired interface and personalize
 2. Update database credentials in `application.properties`
 3. Run the Spring Boot app
 
+### Starter Data
+To preview the app or share it locally
+1. Ensure your database schema is initialized.
+2. Run the seed script:
+3. There is script in Seed Folder starter-data.sql
+   > “Whether you’re a curious contributor or just Dad checking out the build, load the starter data and jump right into Boolean Learning!”
+   
 ### Frontend (React + Vite)
 1. Navigate to `/frontend`
 2. Install dependencies  
