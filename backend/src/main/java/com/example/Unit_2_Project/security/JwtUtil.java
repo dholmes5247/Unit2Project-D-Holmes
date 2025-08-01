@@ -1,5 +1,6 @@
 package com.example.Unit_2_Project.security;
 
+import com.example.Unit_2_Project.model.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +23,10 @@ public class JwtUtil {
     }
 
     // Create a JWT for the given email
-    public String generateToken(String email) {
+    public String generateToken(String email, Role role) {
         return Jwts.builder()
-                .setSubject(email)                        // Set email as the subject
+                .setSubject(email)  // Set email as the subject
+                .claim("role", role.name()) // Adds "role": "USER" to JWT claims
                 .setIssuedAt(new Date())                 // Token issue time
                 .setExpiration(new Date(System.currentTimeMillis() + 43200000)) // Expires in 12 hours
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256) // Sign token with secret

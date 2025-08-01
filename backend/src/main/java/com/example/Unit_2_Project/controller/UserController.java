@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonBuilderUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,6 +116,7 @@ public class UserController {
     }
 
     // POST /api/users/signup – Creates new user and returns success message
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody UserSignupDTO userDto) {
         try {
@@ -161,7 +163,7 @@ public class UserController {
         }
 
         // 🧠 Step 3: Generate JWT
-        String token = jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
 
         // 📅 Save Login Event
         LoginEvent event = new LoginEvent();
@@ -192,6 +194,7 @@ public class UserController {
 
 
     // PUT /api/users/{id} - Update an existing user
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody UserUpdateDTO dto) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -221,7 +224,10 @@ public class UserController {
 
 
     // DELETE /api/users/{id} - Delete a user
+
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         System.out.println("🧾 DELETE request received for user ID: " + id);
 

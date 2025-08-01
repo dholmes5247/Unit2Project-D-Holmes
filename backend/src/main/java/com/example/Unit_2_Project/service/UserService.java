@@ -1,5 +1,5 @@
 package com.example.Unit_2_Project.service;
-
+import com.example.Unit_2_Project.model.Role;
 import com.example.Unit_2_Project.dto.UserSignupDTO;
 import com.example.Unit_2_Project.model.User;
 import com.example.Unit_2_Project.repository.UserRepository;
@@ -41,6 +41,8 @@ public class UserService {
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setSchool(userDto.getSchool());
+        user.setRole(Role.USER); //  Assuming your User class has a Role field
+
 
         // Securely hash the password before saving
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
