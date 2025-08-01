@@ -221,7 +221,7 @@ public class UserController {
 
 
     // DELETE /api/users/{id} - Delete a user
-    @DeleteMapping("/api/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         System.out.println("🧾 DELETE request received for user ID: " + id);
 
@@ -237,10 +237,11 @@ public class UserController {
 
         } catch (Exception e) {
             System.err.println("💥 DELETE failed: " + e.getMessage());
-            e.printStackTrace(); // print full error to console/logs
+            e.printStackTrace(); // << This is the gold we need
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500
         }
     }
+
 }
 
 

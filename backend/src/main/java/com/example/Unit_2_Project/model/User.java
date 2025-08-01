@@ -49,6 +49,13 @@ public class User {
     @Column(nullable = false)
     private String school;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JsonManagedReference
+    private List<LoginEvent> loginEvents = new ArrayList<>();
+
+
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
