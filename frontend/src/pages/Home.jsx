@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
-import trueFalseImage from "../assets/images/trueFalseImage.jpg"; // Adjust path if needed
+import { AuthContext } from "../context/AuthContext.jsx";
+import trueFalseImage from "../assets/images/trueFalseImage.jpg"; 
 import './Home.css';
 import { secureFetch } from "../hooks/API";
+import ModalIntro from '../components/Modal/HeroIntroModal.jsx'
 
 export default function Home() {
   const { user } = useContext(AuthContext);
@@ -11,6 +12,9 @@ export default function Home() {
   //  Local state
   const [loginStats, setLoginStats] = useState(null);
   const [userStats, setUserStats] = useState(null);
+
+  
+ 
 
   //  Fetch both login stats and user stats on mount
   useEffect(() => {
@@ -45,12 +49,15 @@ export default function Home() {
   //  Page layout and rendering
   return (
   <div className="full-home-page">
+{<ModalIntro />}  {/* Modal decides internally whether to show or not */}
+
     {/* LEFT SIDE: Intro, Info, Image */}
     <div className="left-panel">
     <div className="screen-box">
     
       <h2>Welcome to Boolean || Learning</h2>
-      <p>
+      
+      <p className="auth-links">
         <Link to="/login">Log in</Link> or{" "}
         <Link to="/signup">Sign up</Link> to begin.
       </p>
@@ -103,6 +110,7 @@ export default function Home() {
   <div className="right-panel login-teaser">
     <div className="screen-box">
       <h2>🎤 User Feed Offline</h2>
+      <p></p>
       <Link to="/login" className="login-button">Activate Feed</Link>
     </div>
   </div>
