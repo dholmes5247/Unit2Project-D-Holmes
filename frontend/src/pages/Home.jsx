@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import trueFalseImage from "../assets/images/trueFalseImage.jpg"; // Adjust path if needed
 import './Home.css';
+import { secureFetch } from "../hooks/API";
 
 export default function Home() {
   const { user } = useContext(AuthContext);
@@ -18,7 +19,7 @@ export default function Home() {
     // Fetch login stats
     const fetchLoginStats = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/stats/${user.id}`);
+        const res = await secureFetch(`/api/stats/${user.id}`);
         const data = await res.json();
         setLoginStats(data);
       } catch (err) {
@@ -29,7 +30,7 @@ export default function Home() {
     // Fetch user stats
     const fetchUserStats = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/user/stats/${user.id}`);
+        const res = await secureFetch(`/api/user/stats/${user.id}`);
         const data = await res.json();
         setUserStats(data);
       } catch (err) {
@@ -91,7 +92,7 @@ export default function Home() {
         <div className="stat-item"><span>🔥 Login Streak:</span> {loginStats.loginStreak} days</div>
         <div className="stat-item"><span>🧠 Quizzes Taken:</span> {userStats.totalQuizzesTaken}</div>
         <div className="stat-item"><span>💡 Questions Answered:</span> {userStats.totalQuestionsAnswered}</div>
-        <div className="stat-item"><span>📊 Avg Score:</span> {userStats.averageScore.toFixed(2)}%</div>
+        <div className="stat-item"><span>📊 Avg # Correct:</span> {userStats.averageScore.toFixed(2)}</div>
         <div className="stat-item"><span>📈 Improvement:</span> {userStats.improvementRate.toFixed(2)}%</div>
         <div className="stat-item"><span>🎯 This Week:</span> {userStats.quizzesTakenThisWeek}</div>
         <div className="stat-item"><span>🌐 Categories Explored:</span> {userStats.categoriesExplored}</div>

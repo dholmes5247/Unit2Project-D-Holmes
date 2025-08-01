@@ -138,57 +138,57 @@ public class UserController {
     }
 
 
-// POST /api/users/login – Authenticates user and returns a JWT + user info
-@PostMapping("/login")
-public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO loginDTO) {
+    // POST /api/users/login – Authenticates user and returns a JWT + user info
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO loginDTO) {
 
-    // 🔍 Step 1: Find the user by email
-    Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
+        // 🔍 Step 1: Find the user by email
+        Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
 
-    if (optionalUser.isEmpty()) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("message", "User not found"));
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "User not found"));
+        }
+
+        User user = optionalUser.get();
+
+        // 🔐 Step 2: Verify password
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid password"));
+        }
+
+        // 🧠 Step 3: Generate JWT
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        // 📅 Save Login Event
+        LoginEvent event = new LoginEvent();
+        event.setUser(user); // Associate the login event with the user object
+        event.setLoginDate(LocalDate.now());
+        event.setTimestamp(LocalDateTime.now()); // Use LocalDateTime for precise timestamp
+        loginEventRepository.save(event); //  lowercase — the injected bean
+
+
+        // ✨ Step 4: Build a full UserProfileDTO to send to frontend
+        UserProfileDTO profileDTO = new UserProfileDTO();
+        profileDTO.setId(user.getId()); //  This line ensures user.id is available in the frontend
+        profileDTO.setUsername(user.getUsername()); // Correct field
+        profileDTO.setName(user.getName());
+        profileDTO.setEmail(user.getEmail());
+        profileDTO.setSchool(user.getSchool()); // if applicable
+        profileDTO.setQuizAttempts(List.of());  // optionally populate later
+
+        System.out.println("🧠 Name at login: " + user.getName());
+
+        // 🚀 Step 5: Return token + full user profile as response
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", profileDTO); // 👈 This replaces the manual Map and ensures full user data
+        System.out.println("🧠 Name at login: " + user.getName());
+        return ResponseEntity.ok(response);
     }
-
-    User user = optionalUser.get();
-
-    // 🔐 Step 2: Verify password
-    if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("message", "Invalid password"));
-    }
-
-    // 🧠 Step 3: Generate JWT
-    String token = jwtUtil.generateToken(user.getEmail());
-
-    // 📅 Save Login Event
-    LoginEvent event = new LoginEvent();
-    event.setUser(user); // Associate the login event with the user object
-    event.setLoginDate(LocalDate.now());
-    event.setTimestamp(LocalDateTime.now()); // Use LocalDateTime for precise timestamp
-    loginEventRepository.save(event); //  lowercase — the injected bean
-
-
-    // ✨ Step 4: Build a full UserProfileDTO to send to frontend
-    UserProfileDTO profileDTO = new UserProfileDTO();
-    profileDTO.setId(user.getId()); //  This line ensures user.id is available in the frontend
-    profileDTO.setUsername(user.getUsername()); // Correct field
-    profileDTO.setName(user.getName());
-    profileDTO.setEmail(user.getEmail());
-    profileDTO.setSchool(user.getSchool()); // if applicable
-    profileDTO.setQuizAttempts(List.of());  // optionally populate later
-
-    System.out.println("🧠 Name at login: " + user.getName());
-
-    // 🚀 Step 5: Return token + full user profile as response
-    Map<String, Object> response = new HashMap<>();
-    response.put("token", token);
-    response.put("user", profileDTO); // 👈 This replaces the manual Map and ensures full user data
-    System.out.println("🧠 Name at login: " + user.getName());
-    return ResponseEntity.ok(response);
-}
 
 
     // PUT /api/users/{id} - Update an existing user
@@ -221,21 +221,28 @@ public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserLoginDTO l
 
 
     // DELETE /api/users/{id} - Delete a user
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
-        System.out.println("🔥 DELETE request received for user ID: " + id);
+        System.out.println("🧾 DELETE request received for user ID: " + id);
 
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            System.out.println("✅ Deleted user with ID: " + id);
-            return ResponseEntity.noContent().build();
+        try {
+            if (userRepository.existsById(id)) {
+                userRepository.deleteById(id);
+                System.out.println("✅ Deleted user with ID: " + id);
+                return ResponseEntity.noContent().build(); // 204
+            }
+
+            System.out.println("⚠️ User ID not found: " + id);
+            return ResponseEntity.notFound().build(); // 404
+
+        } catch (Exception e) {
+            System.err.println("💥 DELETE failed: " + e.getMessage());
+            e.printStackTrace(); // print full error to console/logs
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500
         }
-
-        System.out.println("❌ User ID not found: " + id);
-        return ResponseEntity.notFound().build();
     }
-
 }
+
 
 
 

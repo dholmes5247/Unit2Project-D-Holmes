@@ -3,12 +3,13 @@ import QuestionList from '../components/QuestionList/QuestionList';
 import { AuthContext } from '../context/AuthContext';
 
 import './Quiz.css';
+import { secureFetch } from '../hooks/API';
 
 
 function Quiz() {
   const { user } = useContext(AuthContext);
 
-  // ✅ Core state for scoring, flow, and summary rendering
+  //  Core state for scoring, flow, and summary rendering
   const [ score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState('');
@@ -16,9 +17,11 @@ function Quiz() {
   const [quizSummary, setQuizSummary] = useState(null); // stores backend response after quiz completes
   const [isLoading, setIsLoading] = useState(false);
 
-  // ✅ Load available subjects on mount
+
+
+  //  Load available subjects on mount
   useEffect(() => {
-    fetch('http://localhost:8080/api/subjects')
+    secureFetch('/api/subjects')
       .then(res => res.json())
       .then(data => setSubjectList(data))
       .catch(err => {
@@ -39,17 +42,18 @@ function Quiz() {
 }, [selectedSubject, quizFinished]);
 
 
+
   const resetQuizState = () => {
   setScore(0);
   setQuizFinished(false);
   setQuizSummary(null);
 };
-  // ✅ Handle retake (same subject, reset state)
+  //  Handle retake (same subject, reset state)
   const handleRetakeQuiz = () => {
     resetQuizState();
   };
 
-  // ✅ Handle switching subjects
+  //  Handle switching subjects
   const handleChooseSubject = () => {
   setSelectedSubject('');
   setQuizFinished(false);
@@ -57,10 +61,10 @@ function Quiz() {
 };
 
 
-
-  // ✅ Get subject name from subjectList
+  //  Get subject name from subjectList
   const currentSubjectName =
     subjectList.find(s => s.id === parseInt(selectedSubject))?.name || selectedSubject;
+
 
 
 return (
@@ -72,9 +76,11 @@ return (
           <div className="static-screen">
             <p className="flicker-text">📡 Tuning in...</p>
           </div>
+
         ) : (
+
           <>
-            {/* ✅ Subject Selection OR Quiz Content */}
+            {/*  Subject Selection OR Quiz Content */}
             {!selectedSubject ? (
               <div className="tv-static-wrapper">
               <div className="static-background" />
@@ -98,11 +104,10 @@ return (
                   <p className="channel-helper-text">Please select a subject to begin the quiz.</p>
                 </div>
               </div>
-</div>
+              </div>
 
             ) : (
-              <>
-                
+              <>                
 
                 {/* ✅ Subject Info */}
                 <p className="selected-subject">
@@ -116,27 +121,30 @@ return (
               <p>TUNE IN the subject selector! Good Luck & Enjoy!</p>
             )}
 
+            
             {/* ✅ Questions while quiz is active */}
-            {selectedSubject && !quizFinished && (
-              <QuestionList
-                score={score}
-                setScore={setScore}
-                setQuizFinished={setQuizFinished}
-                selectedSubject={selectedSubject}
-                user={user}
-                showSummary={(attemptObj) => {
-                  if (!attemptObj) {
-                    setScore(0);
-                    setQuizSummary(null);
-                    setQuizFinished(true);
-                    return;
-                  }
-                  setScore(attemptObj.score || attemptObj.correct || 0);
-                  setQuizSummary(attemptObj);
-                  setQuizFinished(true);
-                }}
-              />
-            )}
+                {selectedSubject && !quizFinished && (
+                  <QuestionList
+                    score={score}
+                    setScore={setScore}
+                    setQuizFinished={setQuizFinished}
+                    selectedSubject={selectedSubject}
+                    user={user}
+                    showSummary={(attemptObj) => {
+                      if (!attemptObj) {
+                        setScore(0);
+                        setQuizSummary(null);
+                        setQuizFinished(true);
+                        return;
+                      }
+                      setScore(attemptObj.score || attemptObj.correct || 0);
+                      setQuizSummary(attemptObj);
+                      setQuizFinished(true);
+                    }}
+                  />
+                )}
+
+
 
             {/* ✅ Quiz Summary after completion */}
             {selectedSubject && quizFinished && quizSummary && (

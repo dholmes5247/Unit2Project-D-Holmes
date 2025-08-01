@@ -1,23 +1,31 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useEffect } from 'react';
+import { secureFetch } from '../hooks/API.jsx'; // Adjust path as needed
+
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+
   const isAuthenticated = Boolean(user);
   
   // 🔁 Step 1: Rehydrate user from localStorage on page load
   useEffect(() => {
-    const saved = localStorage.getItem('user');
-    if (saved) setUser(JSON.parse(saved)); // ✅ includes id now
-  }, []);
+    const savedUser = localStorage.getItem('user');
+    const savedToken = localStorage.getItem('token');
+    if (savedUser && savedToken) {
+    setUser(JSON.parse(savedUser));
+    setToken(savedToken); // need to add token state
+  }
+}, []);
 
-  // 📝 Step 2: Signup logic (optional auto-login later)
+  //  Step 2: Signup logic (optional auto-login )
   const signup = async (data) => {
     
 
-    const res = await fetch('http://localhost:8080/api/users/signup', {
+    const res = await secureFetch('/api/users/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -35,7 +43,7 @@ console.log("🧾 Backend login response:", body);
 
   // 🔐 Step 3: Login — saves full user profile with ID
   const login = async ({ email, password }) => {
-    const res = await fetch('http://localhost:8080/api/users/login', {
+    const res = await secureFetch('/api/users/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -86,7 +94,8 @@ console.log("🎯 Logged-in user:", user);
 
   // 🌐 Step 5: Auth context provided to app
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signup, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, signup, login, logout }}>
+
       {children}
     </AuthContext.Provider>
   );

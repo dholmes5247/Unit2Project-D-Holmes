@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import './Leaderboard.css';
 import albertTongue from '../../assets/images/Albert__tongue.jpg';
 import { AuthContext } from '../../context/AuthContext';
+import { secureFetch } from '../../hooks/API';
 
 
 const Leaderboard = () => {
@@ -24,37 +25,36 @@ const [hasNextPage, setHasNextPage] = useState(true);
   // Get the logged-in user (if any) from context
   const { user } = useContext(AuthContext);
 
-useEffect(() => {
-  let endpoint = `http://localhost:8080/api/leaderboard/top?page=${page}&size=${pageSize}`;
+      useEffect(() => {
+        let endpoint = `/api/leaderboard/top?page=${page}&size=${pageSize}`;
 
-  if (view === 'subject' && subjectId) {
-    endpoint = `http://localhost:8080/api/leaderboard/subject/${subjectId}`;
-  } else if (view === 'user' && user?.id) {
-    endpoint = `http://localhost:8080/api/leaderboard/user/${user.id}?page=${page}&size=${pageSize}`;
-  }
+        if (view === 'subject' && subjectId) {
+          endpoint = `/api/leaderboard/subject/${subjectId}`;
+                } else if (view === 'user' && user?.id) {
+                endpoint = `/api/leaderboard/user/${user.id}?page=${page}&size=${pageSize}`;
+                }                 
 
-  fetch(endpoint)
-    .then(res => {
-      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-      return res.json();
-    })
-    .then(data => {
-      console.log("Paged leaderboard:", data);
-      setLeaderboard(data);
-      // If empty result on a page > 0, then there are no more pages
-      setHasNextPage(data.length > 0 || page === 0);
-      
-    })
-    .catch(err => {
-      console.error("Leaderboard fetch failed:", err);
-      setLeaderboard([]);
-    });
-}, [view, subjectId, user, page, pageSize]);
+                  secureFetch(endpoint)
+                  .then(res => {
+                    if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+                    return res.json();
+                  })            
+                    .then(data => {
+                      console.log("Paged leaderboard:", data);
+                      setLeaderboard(data);
+                      setHasNextPage(data.length > 0 || page === 0);
+                    })
+          .catch(err => {
+            console.error("Leaderboard fetch failed:", err);
+            setLeaderboard([]);
+          });
+      }, [view, subjectId, user, page, pageSize]);
+
 
 
 
   useEffect(() => {
-  fetch('http://localhost:8080/api/subjects')
+  secureFetch('/api/subjects')
     .then(res => {
       if (!res.ok) throw new Error(res.statusText);
       return res.json();
