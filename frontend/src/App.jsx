@@ -11,12 +11,14 @@ import SignUpForm      from './components/SignUpForm/SignUpForm';
 import Leaderboard     from './components/Leaderboard/Leaderboard';
 import Rabbit          from './components/Rabbit/Rabbit';
 import './App.css';
+import ModalIntro from './components/Modal/HeroIntroModal';
 
 
 
 export default function App() {
   return (
     <>
+    <ModalIntro /> {/*  Add this line near the top-level */}
     <div className="app-container">
       <Header />
       
