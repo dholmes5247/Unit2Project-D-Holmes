@@ -182,20 +182,22 @@ public class UserController {
         profileDTO.setSchool(user.getSchool()); // if applicable
         profileDTO.setQuizAttempts(List.of());  // optionally populate later
 
-        System.out.println("🧠 Name at login: " + user.getName());
+
 
         // 🚀 Step 5: Return token + full user profile as response
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
-        response.put("user", profileDTO); // 👈 This replaces the manual Map and ensures full user data
-        System.out.println("🧠 Name at login: " + user.getName());
+        response.put("user", profileDTO); //  This replaces the manual Map and ensures full user data
+
         return ResponseEntity.ok(response);
     }
 
 
     // PUT /api/users/{id} - Update an existing user
-    @PreAuthorize("hasRole('ADMIN')")
+
     @PutMapping("/{id}")
+    @PreAuthorize("(hasRole('USER') or hasRole('ADMIN')) and #id == authentication.principal.id")
+
     public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody UserUpdateDTO dto) {
         Optional<User> optionalUser = userRepository.findById(id);
 
@@ -226,7 +228,8 @@ public class UserController {
     // DELETE /api/users/{id} - Delete a user
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("(hasRole('USER') or hasRole('ADMIN')) and #id == authentication.principal.id")
+
 
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         System.out.println("🧾 DELETE request received for user ID: " + id);

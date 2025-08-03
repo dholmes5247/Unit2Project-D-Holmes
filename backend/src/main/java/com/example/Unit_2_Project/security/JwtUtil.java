@@ -34,9 +34,9 @@ public class JwtUtil {
     }
 
     // Validate token against expected email and expiration
-    public boolean validateToken(String token, String email) {
-        String subject = extractUsername(token);
-        return subject.equals(email) && !isTokenExpired(token);
+    public boolean validateToken(String token, UserPrincipal userPrincipal) {
+        final String emailFromToken = extractUsername(token);
+        return (emailFromToken.equals(userPrincipal.getEmail()) && !isTokenExpired(token));
     }
 
     // Extract the email (subject) from the token

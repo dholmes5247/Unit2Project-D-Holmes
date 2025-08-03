@@ -4,6 +4,24 @@
   --text-color: #000000;
 }
 
+#portal-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+}
+#portal-root:empty {
+  display: none;
+  pointer-events: none;
+  position: static;
+  z-index: initial;
+  opacity: 0;
+}
+
+
+
 body.dark-mode {
   --bg-color: #121212;
   --text-color: #f0f0f0;
@@ -46,6 +64,9 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+    -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.2); /* This is probably what feels too dark */
 }
 
 .main-content {

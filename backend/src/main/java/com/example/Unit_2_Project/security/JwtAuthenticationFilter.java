@@ -2,6 +2,7 @@
 
 package com.example.Unit_2_Project.security;
 
+import com.example.Unit_2_Project.model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
+import com.example.Unit_2_Project.repository.UserRepository;
 import java.io.IOException;
 
 @Component
@@ -19,7 +20,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Runs once per request — checks for token and sets authentication
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -31,32 +34,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = null;
         String email = null;
 
-        // Extract token from "Authorization: Bearer <token>"
+        // 🎼 Extract token and subject (email)
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            email = jwtUtil.extractUsername(token); // Get subject (email) from token
+            email = jwtUtil.extractUsername(token);
         }
 
-        // If token is valid and no authentication is set yet
+        // 🎯 Proceed if email exists and no one’s authenticated yet
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            if (jwtUtil.validateToken(token, email)) {
-                // Create Spring Security token
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(email, null, null);
+            // 🎬 Lookup user and wrap into principal
+            User user = userRepository.findByEmail(email).orElseThrow();
+            UserPrincipal userPrincipal = new UserPrincipal(user);
 
-                authenticationToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
+            // 🔐 Validate token against full principal
+            if (jwtUtil.validateToken(token, userPrincipal)) {
 
-                // Attach to security context
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userPrincipal,
+                                null,
+                                userPrincipal.getAuthorities()
+                        );
+
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
 
-        // Continue processing the request
         filterChain.doFilter(request, response);
     }
 }
+
+
+
 
 

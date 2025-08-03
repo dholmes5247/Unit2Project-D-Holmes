@@ -6,9 +6,9 @@
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0rem;
   box-sizing: border-box;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 /* ───────────── LEFT PANEL ───────────── */

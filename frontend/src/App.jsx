@@ -18,8 +18,9 @@ import ModalIntro from './components/Modal/HeroIntroModal';
 export default function App() {
   return (
     <>
-    <ModalIntro /> {/*  Add this line near the top-level */}
+    
     <div className="app-container">
+    
       <Header />
       
       <div className="content-area">
@@ -47,6 +48,7 @@ export default function App() {
       </main>
       </div>
       </div>
+      
       <Footer />
     </>
   );
