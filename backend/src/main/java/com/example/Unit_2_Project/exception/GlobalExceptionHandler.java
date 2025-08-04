@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         );
 
         // Log to console for deep debugging
-        System.out.println("Signup validation failed: " + errors);
+        // System.out.println("Signup validation failed: " + errors);
 
         return ResponseEntity.badRequest().body(errors);
     }

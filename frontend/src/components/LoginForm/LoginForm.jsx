@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/UseAuth";
-import { AuthContext } from "../../context/AuthContext"; // Make sure this path matches your setup
+import { AuthContext } from "../../context/AuthContext"; // Make sure this path matches setup
 import EditProfileForm from "../EditProfileForm/EditProfileForm"; // Adjust path if needed
 import "./LoginForm.css";
 
@@ -135,7 +135,7 @@ export default function LoginForm() {
           </p>
         </form>
 
-        {/* ✅ Clean conditional */}
+        {/*  Clean conditional */}
         {showEditForm && editingUser && (
           <>
             <p>You can update your profile details below.</p>

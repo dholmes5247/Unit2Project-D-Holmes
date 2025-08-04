@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/UseAuth"; // Custom auth hook
+// will come back to this -import Toast from "../../components/Toast/Toast"; //  Use modular Toast
 import "./SignUpForm.css";
 
 export default function SignUpForm() {
@@ -14,6 +15,7 @@ export default function SignUpForm() {
   });
 
   const [err, setErr] = useState(""); // Holds any error messages
+  
   const { signup } = useAuth(); // Signup function from auth context
   const navigate = useNavigate(); // Used to redirect after signup
 
@@ -28,7 +30,14 @@ export default function SignUpForm() {
     setErr(""); // Clear existing errors
     try {
       await signup(form); // Call signup from auth context
-      navigate("/login"); // Redirect to login after success
+
+      // redirect after delay
+      
+      setTimeout(() => {     
+          
+        navigate("/login"); // Redirect to login after success
+      }, 2500);
+      
     } catch (error) {
       setErr(error.message); // Display error from backend
     }
@@ -41,6 +50,7 @@ export default function SignUpForm() {
 
         {err && <p className="error">{err}</p>}
 
+        {/* Form Fields */}
         <label>
           Name:
           <input
@@ -95,6 +105,8 @@ export default function SignUpForm() {
 
         <button type="submit">Sign Up</button>
       </form>
+
+      
     </div>
   );
 }

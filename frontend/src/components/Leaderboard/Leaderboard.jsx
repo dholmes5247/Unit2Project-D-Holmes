@@ -39,7 +39,7 @@ const Leaderboard = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("Paged leaderboard:", data);
+       //  console.log("Paged leaderboard:", data);
         setLeaderboard(data);
         setHasNextPage(data.length > 0 || page === 0);
       })

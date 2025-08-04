@@ -232,16 +232,16 @@ public class UserController {
 
 
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
-        System.out.println("🧾 DELETE request received for user ID: " + id);
+
 
         try {
             if (userRepository.existsById(id)) {
                 userRepository.deleteById(id);
-                System.out.println("✅ Deleted user with ID: " + id);
+
                 return ResponseEntity.noContent().build(); // 204
             }
 
-            System.out.println("⚠️ User ID not found: " + id);
+
             return ResponseEntity.notFound().build(); // 404
 
         } catch (Exception e) {

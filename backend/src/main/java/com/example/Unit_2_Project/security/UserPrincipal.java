@@ -28,7 +28,7 @@ public class UserPrincipal implements UserDetails {
                 new SimpleGrantedAuthority("ROLE_" + user.getRole()) //  Construct role from your user entity
         );
 
-        System.out.println(" UserPrincipal created for ID: " + id + ", username: " + username);
+
     }
 
     //  Optional custom getter—not part of UserDetails, so no @Override

@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = Boolean(user);
 
-  // 🔁 Step 1: Rehydrate user from localStorage on page load
+  //  Step 1: Rehydrate user from localStorage on page load
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     const savedToken = localStorage.getItem("token");
@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
     });
 
     const body = await res.json().catch(() => ({}));
-    console.log("🧾 Backend login response:", body);
+    // console.log("🧾 Backend login response:", body);
     if (!res.ok) {
       throw new Error(body.message || "Signup failed");
     }
@@ -61,7 +61,7 @@ export function AuthProvider({ children }) {
 
     const { token, user: backendUser } = body;
 
-    // ✅ Preserve full user object including ID
+    //  Preserve full user object including ID
     const transformedUser = {
       id: backendUser.id,
       username: backendUser.username,
@@ -77,7 +77,7 @@ export function AuthProvider({ children }) {
     return transformedUser;
   };
 
-  console.log("🎯 Logged-in user:", user);
+  // console.log("🎯 Logged-in user:", user);
 
   // 🚪 Step 4: Logout
   const logout = () => {
