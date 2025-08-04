@@ -1,6 +1,6 @@
 #  Boolean || Learning - Fullstack Quiz App
 
-An immersive quiz experience with a broadcast-inspired interface and personalized user stats. Designed for clarity, modularity, and delight.
+An immersive quiz experience with a broadcast-inspired interface and personalized user stats. Designed for clarity, modularity, and delight. I wanted to learn to use effects so there are a few hidden surprises if you are fast enough & look hard enough.  I have plans to build up the subject and questions that can be offered along with the type of question, not just true/false.  I would like to create an interface for users to be able to upload questions (maybe check them with AI or gate with roles) discuss concepts or further research.  Eventually I would like to incorporate video clips and create the ability to offer subjects on football plays, or skydiving techniques etc.  Sky is the limit!
 
 ##  Tech Stack
 
