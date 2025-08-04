@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth'; // Custom auth hook
-import './SignUpForm.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/UseAuth"; // Custom auth hook
+import "./SignUpForm.css";
 
 export default function SignUpForm() {
   // Initialize form state with empty strings (avoids uncontrolled input warnings)
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    username: '',
-    password: '',
-    school: ''
+    name: "",
+    email: "",
+    username: "",
+    password: "",
+    school: "",
   });
 
-  const [err, setErr] = useState(''); // Holds any error messages
-  const { signup } = useAuth();       // Signup function from auth context
-  const navigate = useNavigate();     // Used to redirect after signup
+  const [err, setErr] = useState(""); // Holds any error messages
+  const { signup } = useAuth(); // Signup function from auth context
+  const navigate = useNavigate(); // Used to redirect after signup
 
   // Handle input changes and update form state
   const handleChange = (e) => {
@@ -25,76 +25,76 @@ export default function SignUpForm() {
   // Submit signup form to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErr(''); // Clear existing errors
+    setErr(""); // Clear existing errors
     try {
-      await signup(form);    // Call signup from auth context
-      navigate('/login');    // Redirect to login after success
+      await signup(form); // Call signup from auth context
+      navigate("/login"); // Redirect to login after success
     } catch (error) {
       setErr(error.message); // Display error from backend
     }
   };
 
-return (
-  <div className="signup-form-container">
-    <form onSubmit={handleSubmit}>
-      <h2>Sign Up</h2>
+  return (
+    <div className="signup-form-container">
+      <form onSubmit={handleSubmit}>
+        <h2>Sign Up</h2>
 
-      {err && <p className="error">{err}</p>}
+        {err && <p className="error">{err}</p>}
 
-      <label>
-        Name:
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-      </label>
+        <label>
+          Name:
+          <input
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-      <label>
-        Email:
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-      </label>
+        <label>
+          Email:
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-      <label>
-        Username:
-        <input
-          name="username"
-          value={form.username}
-          onChange={handleChange}
-          required
-        />
-      </label>
+        <label>
+          Username:
+          <input
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-      <label>
-        Password:
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-      </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-      <label>
-        School:
-        <input
-          name="school"
-          value={form.school}
-          onChange={handleChange}
-          required
-        />
-      </label>
+        <label>
+          School:
+          <input
+            name="school"
+            value={form.school}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-      <button type="submit">Sign Up</button>
-    </form>
-  </div>
-);
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+  );
 }

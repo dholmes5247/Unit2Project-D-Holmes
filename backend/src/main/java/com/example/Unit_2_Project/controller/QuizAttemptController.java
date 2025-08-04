@@ -68,17 +68,17 @@ public class QuizAttemptController {
                 return ResponseEntity.badRequest().body("Missing subject ID.");
             }
 
-            // ✅ Calculate duration or use provided timeTakenInSeconds
+            //  Calculate duration or use provided timeTakenInSeconds
             Long duration = (attemptDTO.getStartedAt() != null && attemptDTO.getCompletedAt() != null)
                     ? Duration.between(attemptDTO.getStartedAt(), attemptDTO.getCompletedAt()).getSeconds()
                     : attemptDTO.getTimeTakenInSeconds();
 
-            // ✅ Construct new QuizAttempt entity
+            //  Construct new QuizAttempt entity
             QuizAttempt attempt = new QuizAttempt();
             attempt.setScore(attemptDTO.getScore());
             attempt.setStartedAt(attemptDTO.getStartedAt());
             attempt.setCompletedAt(attemptDTO.getCompletedAt());
-            attempt.setDuration(duration); // ✅ clean and explicit
+            attempt.setDuration(duration); //  clean and explicit
             attempt.setTotalQuestions(attemptDTO.getTotalQuestions());
 
 

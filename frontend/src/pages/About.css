@@ -104,12 +104,14 @@ h2 {
   }
 
   .secret-link img {
+    display: block;
     max-width: 100%;
-    margin-bottom: 1rem;
+    margin: 0 0 1rem;
   }
 
   .career-experience {
     width: 100%;
   }
 }
+
 

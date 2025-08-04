@@ -40,14 +40,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             email = jwtUtil.extractUsername(token);
         }
 
-        // 🎯 Proceed if email exists and no one’s authenticated yet
+        //  Proceed if email exists and no one’s authenticated yet
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             // 🎬 Lookup user and wrap into principal
             User user = userRepository.findByEmail(email).orElseThrow();
             UserPrincipal userPrincipal = new UserPrincipal(user);
 
-            // 🔐 Validate token against full principal
+            //  Validate token against full principal
             if (jwtUtil.validateToken(token, userPrincipal)) {
 
                 UsernamePasswordAuthenticationToken authToken =
