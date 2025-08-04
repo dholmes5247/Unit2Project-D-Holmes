@@ -172,7 +172,7 @@ const Leaderboard = () => {
             </tbody>
           </table>
         ) : (
-          <p>No leaderboard data available yet.</p>
+          <p>No leaderboard data available yet. Please sign in!</p>
         )}
       </div>
     </div>
