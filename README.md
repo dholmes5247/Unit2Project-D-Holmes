@@ -1,6 +1,6 @@
 #  Boolean || Learning - Fullstack Quiz App
 
-An immersive quiz experience with a broadcast-inspired interface and personalized user stats. Designed for clarity, modularity, and delight.
+An immersive quiz experience with a broadcast-inspired interface and personalized user stats. Designed for clarity, modularity, and delight. I wanted to learn to use effects so there are a few hidden surprises if you are fast enough & look hard enough.  I would definitely like to expand this out and keep playing.  I tried to create some equences through modals that I enjoyed and would like to do more of as well. Sky is the limit!
 
 ##  Tech Stack
 
@@ -10,7 +10,9 @@ An immersive quiz experience with a broadcast-inspired interface and personalize
 - **Tooling**: IntelliJ IDEA, VS Code, Git/GitHub, Trello
 
 ## Preview Screenshots
--are available in the main folder of the repository if you want to see the different pages.  
+-are available in the main folder of the repository if you want to see the different pages. 
+- You can get an ERD Diagram here: https://drive.google.com/file/d/1_UrJYzUcad1nMR9V-wXml4oAxQWvAO7U/view?usp=sharing](https://drive.google.com/file/d/1D8IveDpbxEjF_NctjvCREfDmzkFckoYG/view?usp=sharing)
+- Here is a wireframe that I will be improving on [https://drive.google.com/file/d/1rxO2c8DNkHmxNtSQbGvARlimJmCpGFcI/view?usp=sharing](https://drive.google.com/file/d/1IpoVGl_lnvSnZaFIn_oLGc9tQHga43GE/view?usp=sharing)
 
 ##  Setup & Installation
 
