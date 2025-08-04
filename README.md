@@ -12,7 +12,7 @@ An immersive quiz experience with a broadcast-inspired interface and personalize
 ## Preview Screenshots
 -are available in the main folder of the repository if you want to see the different pages. 
 - You can get an ERD Diagram here: https://drive.google.com/file/d/1_UrJYzUcad1nMR9V-wXml4oAxQWvAO7U/view?usp=sharing](https://drive.google.com/file/d/1D8IveDpbxEjF_NctjvCREfDmzkFckoYG/view?usp=sharing)
-- Here is a wireframe that I will be improving on https://drive.google.com/file/d/1rxO2c8DNkHmxNtSQbGvARlimJmCpGFcI/view?usp=sharing
+- Here is a wireframe that I will be improving on [https://drive.google.com/file/d/1rxO2c8DNkHmxNtSQbGvARlimJmCpGFcI/view?usp=sharing](https://drive.google.com/file/d/1IpoVGl_lnvSnZaFIn_oLGc9tQHga43GE/view?usp=sharing)
 
 ##  Setup & Installation
 
