@@ -46,9 +46,9 @@ To preview the app or share it locally
 - 🎓 **Tutor Integration** – AI-powered explanations enrich learning during quizzes  
 - 💡 **Feedback Animations** – Positive reinforcement with custom teletype, blipDrop, and emotion-driven cues  
 - 🎯 **Dynamic Question Flow** – Tracks accuracy and offers targeted encouragement  
-- 🏆 **User Stats Panel** – ESPN-style overview showing quiz performance and progress
+- 🏆 **User Stats Panel** – overview showing quiz performance and progress
 
-> Every interaction is designed to feel responsive, delightful, and emotionally intelligent.
+>  designed to feel responsive
 
 ## Usage & UX Tips
 
@@ -58,7 +58,7 @@ To preview the app or share it locally
 - **Feedback Effects** – Enjoy themed animations: teletype (text reveal), blipDrop (score blip), and glowPulse (positive reinforcement)  
 - **View Your Stats** – Navigate to the user profile to track quiz history and performance highlights
 
-> Designed for responsiveness and delight across screen sizes.
+> Designed for responsiveness across screen sizes.
 
 ##  Roadmap & Future Enhancements
 
@@ -69,11 +69,11 @@ To preview the app or share it locally
 - Enable filtering by quiz history, subject, score, and date  
 - More animations: button rings, radar effects, glitch overlays
 
-> Boolean Learning is designed to grow — from capstone to community-driven platform.
+> At some point I would like to include videos  as well.  
 
 ##  Contributing
 
-Boolean Learning thrives on collaboration — whether it’s refining questions, improving UX, or expanding backend features. To contribute:
+Boolean Learning thrives on collaboration, whether it’s refining questions, improving UX, or expanding backend features. To contribute:
 
 1. Fork the repository  
 2. Create a feature branch (`git checkout -b feature/your-cool-idea`)  
@@ -82,12 +82,12 @@ Boolean Learning thrives on collaboration — whether it’s refining questions,
 
 Please check out our [Contributor Guide](CONTRIBUTING.md) for design conventions, issue templates, and review etiquette.
 
- From frontend flair to backend logic — all signal boosters welcome!
+ From frontend flair to backend logic, all signal boosters welcome!
 
 ---
 
 ## License
-2024 Holmes Farm LLC
+2025 Holmes Farm LLC
 This project is licensed under the [MIT License](LICENSE).  
 You’re free to use, modify, and share — just include proper attribution.
 
