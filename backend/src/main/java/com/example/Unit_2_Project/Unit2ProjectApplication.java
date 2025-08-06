@@ -13,6 +13,6 @@ public class Unit2ProjectApplication {
 
 		SpringApplication.run(Unit2ProjectApplication.class, args);
 	}
-	// bean definition placeholder if needed in future
+	// bean definition placeholder if needed in future and to get
 
 }
